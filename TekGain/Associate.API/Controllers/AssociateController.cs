@@ -12,5 +12,75 @@ namespace Associate.API.Controllers
     public class AssociateController : ControllerBase
     {
         // Implement the Services here
+        private readonly IAssociateRepository _associateRepository;
+        public AssociateController(IAssociateRepository associateRepository)
+        {
+            _associateRepository = associateRepository;
+
+        }
+
+        [HttpGet("GetAssociateById/{id}")]
+        public IActionResult GetAssociateById(int id)
+        {
+            try
+            {
+                var associate = _associateRepository.GetAssociateById(id);
+                if (associate != null)
+                {
+                    return Ok(associate);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+        [HttpGet("GetAllAssociate")]
+      //  [Authorize(Roles = "Admin,User")]
+        public IActionResult GetAllAssociate()
+        {
+            var result = _associateRepository.GetAllAssociate();
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else { return BadRequest("Failed to get Associates."); 
+            }
+        }
+
+        [HttpPost("AddAssociate")]
+        public IActionResult AddAssociate([FromBody] TekGain.DAL.Entities.Associate associate)
+        {
+            try
+            {
+                _associateRepository.AddAssociate(associate);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("UpdateAssociateAddress/{id}")]
+        public IActionResult UpdateAssociateAddress(int id, [FromBody] string addr)
+        {
+            try
+            {
+                _associateRepository.UpdateAssociateAddress(id, addr);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

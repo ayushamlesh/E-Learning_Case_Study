@@ -28,6 +28,8 @@ namespace Course.API.Controllers
             }
             else { return BadRequest("Failed to add course."); }
         }
+
+
         [HttpGet("GetAllCourse")]
       [Authorize(Roles = "Admin,User")]
         public IActionResult GetAllCourse()
@@ -39,6 +41,9 @@ namespace Course.API.Controllers
             }
             else { return BadRequest("Failed to get courses."); }
         }
+
+
+
         [HttpPut("UpdateCourse/{id}")]
        [Authorize(Roles = "Admin")]
         public IActionResult UpdateCourse(int id, [FromBody] int fee)
