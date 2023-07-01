@@ -40,14 +40,39 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
+
+
 builder.Services.AddDbContext<TekGainContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTransient<TekGainContext>();
 
 // Implement the dependency containers
+builder.Services.AddScoped<IAssociateRepository, AssociateRepository>();
+
+// Configure the logging services
+builder.Logging.AddConsole();
 
 // Implement the authentication scheme for jwt
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; ;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    //te check who is issuer and other detail
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("veryverysecret.....")),
+        ValidateAudience = false,
+        ValidateIssuer = false
+    };
+
+});
 
 var app = builder.Build();
 
@@ -65,5 +90,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
