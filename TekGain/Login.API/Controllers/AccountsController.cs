@@ -15,19 +15,31 @@ namespace Login.API.Controllers
         {
             _accountRepository = accountRepository;
         }
+
+
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] SignUp signUpObj)
         {
             try
             {
-                await _accountRepository.SignUp(signUpObj);
-                return Ok("User Account created");
+                var result = await _accountRepository.SignUp(signUpObj);
+
+                if (result.Succeeded)
+                {
+                    return Ok("User Account created");
+                }
+                else
+                {
+                    var errors = result.Errors.Select(e => e.Description);
+                    return BadRequest("Failed to create account");
+                }
             }
             catch (Exception)
             {
                 return BadRequest("Failed to create account");
             }
         }
+
 
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] SignIn signInObj)
@@ -36,7 +48,7 @@ namespace Login.API.Controllers
             {
                 string token;
                 var result = await _accountRepository.SignIn(signInObj);
-                if (result == "Failed")
+                if (result == "Incorrect Email/Password")
                 {
                     return BadRequest("Failed to Login");
                 }
