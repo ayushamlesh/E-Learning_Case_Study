@@ -16,6 +16,10 @@ namespace TekGain.DAL
         }
 
         // Implement the DbSet properties here
+
+        public DbSet<Admission> Admissions { get; set; }
+        public DbSet<Associate> Associates { get; set; }
+        public DbSet<Course> Courses { get; set; }
     }
 
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TekGainContext>

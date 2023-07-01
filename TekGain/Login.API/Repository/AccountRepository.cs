@@ -7,8 +7,90 @@ using TekGain.DAL.Entities;
 
 namespace Login.API.Repository
 {
-    public class AccountRepository
+    public class AccountRepository : IAccountRepository
     {
-        // Implement the code here
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<AccountRepository> _logger;
+
+        public AccountRepository(
+            ILogger<AccountRepository> logger,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration)
+        {
+            _logger = logger;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _configuration = configuration;
+        }
+
+
+        public async Task<IdentityResult> SignUp(SignUp signUpObj)
+        {
+
+            var user = new User
+            {
+                UserName = signUpObj.Email,
+                Email = signUpObj.Email,
+                FirstName = signUpObj.FirstName,
+                LastName = signUpObj.LastName
+            };
+            var result = await _userManager.CreateAsync(user, signUpObj.Password);
+
+            if (result.Succeeded)
+            {
+
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+
+
+                await _userManager.AddToRoleAsync(user, "User");
+
+
+                _logger.LogInformation($"{DateTime.Now} INFO: Registration completed for {signUpObj.Email}");
+            }
+
+            return result;
+        }
+
+        public async Task<string> SignIn(SignIn signInObj)
+        {
+            var user = await _userManager.FindByEmailAsync(signInObj.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, signInObj.Password))
+            {
+                _logger.LogWarning($"{DateTime.Now} WAR: Sign failed : {signInObj.Email}");
+                return "Incorrect Email/Password";
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+            };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddDays(Convert.ToInt32(_configuration["JWT:TokenExpirationDays"]));
+            var token = new JwtSecurityToken(
+                _configuration["JWT:ValidIssuer"],
+                _configuration["JWT:ValidAudience"],
+                claims,
+                expires: expires,
+                signingCredentials: credentials
+            );
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            _logger.LogInformation($"{DateTime.Now} INFO: Sign success {signInObj.Email}");
+            return tokenString;
+        }
+
+
     }
 }

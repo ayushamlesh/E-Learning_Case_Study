@@ -1,0 +1,16 @@
+﻿{
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "DownstreamScheme": "https",
+    "ReRoutesCaseSensitive": false,
+    "UseServiceDiscovery": true,
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8090,
+      "Type": "Eureka"
+    }
+  },
+  "Routes": [
+      // Implement the service routes here
+  ]
+}
