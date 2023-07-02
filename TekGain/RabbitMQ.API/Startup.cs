@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using RabbitMQ.Client;
 using Steeltoe.Discovery.Client;
 
 namespace RabbitMQ.API
@@ -17,6 +18,22 @@ namespace RabbitMQ.API
         {
             services.AddDiscoveryClient(Configuration);
             services.AddControllers();
+            services.AddSingleton<IConnection>(provider =>
+            {
+                var factory = new ConnectionFactory
+                {
+                    HostName = "localhost", // Replace with your RabbitMQ server hostname
+                    UserName = "guest", // Replace with your RabbitMQ username
+                    Password = "guest" // Replace with your RabbitMQ password
+                };
+                return factory.CreateConnection();
+            });
+
+            services.AddScoped<IModel>(provider =>
+            {
+                var connection = provider.GetRequiredService<IConnection>();
+                return connection.CreateModel();
+            });
 
             services.AddSwaggerGen(c =>
             {
