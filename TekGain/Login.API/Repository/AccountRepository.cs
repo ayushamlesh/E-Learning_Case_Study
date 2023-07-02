@@ -55,7 +55,7 @@ namespace Login.API.Repository
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
                 await _roleManager.CreateAsync(new IdentityRole("User"));
 
-                await _userManager.AddToRoleAsync(user, "Admin");
+                await _userManager.AddToRoleAsync(user, "User");
 
                 _logger.LogInformation($"{DateTime.Now} INFO: Registration completed for {signUpObj.Email}");
             }
