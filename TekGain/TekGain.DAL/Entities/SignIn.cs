@@ -6,11 +6,11 @@ namespace TekGain.DAL.Entities
     public class SignIn
     {
         // Implement the properties here
-        [Required(ErrorMessage = "Email address is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [Required]
+        [EmailAddress(ErrorMessage = "Valid Email required")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
+        [Required(ErrorMessage = "Password required")]
         public string Password { get; set; }
     }
 }
