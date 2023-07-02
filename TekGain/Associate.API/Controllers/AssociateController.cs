@@ -19,6 +19,7 @@ namespace Associate.API.Controllers
 
         }
 
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("GetAssociateById/{id}")]
         public IActionResult GetAssociateById(int id)
         {
@@ -43,7 +44,7 @@ namespace Associate.API.Controllers
 
 
         [HttpGet("GetAllAssociate")]
-      //  [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAllAssociate()
         {
             var result = _associateRepository.GetAllAssociate();
@@ -55,6 +56,7 @@ namespace Associate.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("AddAssociate")]
         public IActionResult AddAssociate([FromBody] TekGain.DAL.Entities.Associate associate)
         {
@@ -69,6 +71,7 @@ namespace Associate.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateAssociateAddress/{id}")]
         public IActionResult UpdateAssociateAddress(int id, [FromBody] string addr)
         {
