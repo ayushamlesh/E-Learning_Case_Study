@@ -13,14 +13,14 @@ namespace TekGain.DAL.Entities
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Email address required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password required")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Confirm password required")]
-        [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
+        [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; }
     }
 }
