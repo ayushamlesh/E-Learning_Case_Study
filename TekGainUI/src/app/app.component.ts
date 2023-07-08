@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
+  //added variable
+  isLoggedIn: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {
 
@@ -16,9 +17,8 @@ export class AppComponent {
   ngOnInit(): void {
 
    //   Fill the code
-   void {
-    // Check if the user is already logged in
-    if (this.authService.isLoggedIn()) {
+   const token = this.authService.getToken();
+    if (token) {
       this.isLoggedIn = true;
     }
 
@@ -27,6 +27,8 @@ export class AppComponent {
 
    //   Fill the code
    this.authService.logout();
+   this.isLoggedIn = false;
+   this.router.navigate(['']);
 
   }
 

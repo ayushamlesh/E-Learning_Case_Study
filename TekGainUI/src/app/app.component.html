@@ -8,7 +8,7 @@
 </nav>
 
 <div >
-  <mat-card class="card">
+  <mat-card class="card" *ngIf="isLoggedIn">
     <mat-card-content  class="welcome">Welcome Admin !</mat-card-content>
      <mat-card-content class="contant">
       <button mat-raised-button class="button" routerLink="course"> Course</button>

@@ -1,66 +1,44 @@
-
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { User } from './user';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { observable, Observable, of, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import jwt_decode from "jwt-decode";
+import { throwError } from 'rxjs';
+import jwt_decode from 'jwt-decode';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
- private token: string='';
- private role: string='';
+  private token: string = '';
+  private role: string = '';
+
+  constructor(private http: HttpClient) {}
 
   login(user: User): any {
-   //   Fill the code
-   return this.http.post<any>('http://localhost:8081/api/Account/signin', user).pipe(
-    catchError((error: HttpErrorResponse) => {
-      return throwError(this.errorHandler(error));
-    })
-  );
+    return this.http.post<any>('http://localhost:8081/api/Account/signin', user).pipe(
+      catchError((error: HttpErrorResponse) => {
+        return throwError(this.errorHandler(error));
+      })
+    );
   }
-
 
   getToken(): any {
-
-   //   Fill the code
-   return localStorage.getItem('token');
-    }
-
-  logout(): void {
-
-   //   Fill the code
-   localStorage.removeItem('token');
-   localStorage.removeItem('role');
-
+    return localStorage.getItem('token');
   }
+
   getRole(): any {
     const token = this.getToken();
-    var decodedToken = this.decodeToken(token);
-    var roleName = decodedToken.RoleName;
-    return roleName;
-//  Fill the code
-return localStorage.getItem('role');
-
-   }
-   decodeToken(token: string): any {
-    try {
-      const decodedToken = jwt_decode(token);
-      return decodedToken;
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return null;
-    }
+    const decodedToken: any = jwt_decode(token);
+    return decodedToken.RoleName;
   }
 
-
-  constructor(private http: HttpClient) {
-
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
   }
 
   private errorHandler(error: HttpErrorResponse): string {
     // Handle specific error cases if needed
     return error.message || 'Server error';
-}
+  }
 }
