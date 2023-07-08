@@ -24,7 +24,7 @@ returnMsg:any='';
 
 
    //   Fill the code
-   this.returnMsg= this.http.post(this.url+"AddCourse", course).pipe(catchError(this.errorHandler));
+  // this.returnMsg= this.http.post(this.url+"AddCourse", course).pipe(catchError(this.errorHandler));
 
    return this.returnMsg;
      }
@@ -33,9 +33,9 @@ returnMsg:any='';
 
    //   Fill the code
 
-    const updatedCourse = { fees };
+    // const updatedCourse = { fees };
 
-    this.returnMsg= this.http.put(this.url+`UpdateCourse/${courseId}`, updatedCourse).pipe(catchError(this.errorHandler));
+    // this.returnMsg= this.http.put(this.url+`UpdateCourse/${courseId}`, updatedCourse).pipe(catchError(this.errorHandler));
     return this.returnMsg;
      }
 
@@ -43,7 +43,7 @@ returnMsg:any='';
 
    //   Fill the code
 
-    this.returnMsg= this.http.get(this.url+"GetAllCourse").pipe(catchError(this.errorHandler));
+    // this.returnMsg= this.http.get(this.url+"GetAllCourse").pipe(catchError(this.errorHandler));
     return this.returnMsg;
   }
 
@@ -51,17 +51,17 @@ returnMsg:any='';
 
 
    //   Fill the code
-    this.returnMsg = this.http.get(this.url+`GetCourseById/${courseId}`).pipe(catchError(this.errorHandler));
+    // this.returnMsg = this.http.get(this.url+`GetCourseById/${courseId}`).pipe(catchError(this.errorHandler));
     return this.returnMsg;
   }
 
   viewRatingById(id:number): Observable<any>{
-    this.returnMsg=this.http.get(this.url+`GetRating/${id}`).pipe(catchError(this.errorHandler));
+    // this.returnMsg=this.http.get(this.url+`GetRating/${id}`).pipe(catchError(this.errorHandler));
     return this.returnMsg;
   }
 
   calculateAverageRating(id:number,rating:number):Observable<any>{
-    this.returnMsg=this.http.get(this.url+`CalculateAverageRating/${id}/${rating}`).pipe(catchError(this.errorHandler));
+    // this.returnMsg=this.http.get(this.url+`CalculateAverageRating/${id}/${rating}`).pipe(catchError(this.errorHandler));
     return this.returnMsg;
   }
 
