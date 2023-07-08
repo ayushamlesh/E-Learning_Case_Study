@@ -33,7 +33,7 @@ namespace Login.API.Repository
             var userExists = await _um.FindByEmailAsync(signUpObj.Email);
             if (userExists != null)
             {
-                return IdentityResult.Failed();
+                return IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
             }
 
             User user = new()

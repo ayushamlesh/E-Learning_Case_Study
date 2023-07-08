@@ -1,16 +1,16 @@
-﻿using TekGain.DAL;
-using TekGain.DAL.ErrorHandler;
+﻿using TekGain.DAL.ErrorHandler;
+using TekGain.DAL;
 using TekGain.DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Course.API.Repository
 {
     public class CourseRepository : ICourseRepository
     {
-
         // Implement the code here
+
         private readonly TekGainContext _context;
         private readonly ILogger<CourseRepository> _logger;
-
         public CourseRepository(
             TekGainContext context,
             ILogger<CourseRepository> logger
