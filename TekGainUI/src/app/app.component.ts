@@ -7,25 +7,31 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
- 
+
 
   constructor(private authService: AuthService, private router: Router) {
 
   }
-  
+
   ngOnInit(): void {
-    
+
    //   Fill the code
-   
+   void {
+    // Check if the user is already logged in
+    if (this.authService.isLoggedIn()) {
+      this.isLoggedIn = true;
+    }
 
   }
   onlogout() {
-    
-   //   Fill the code
-   
-  }	 	  	  		    	   	 	   	 	
 
- 
+   //   Fill the code
+   this.authService.logout();
+
+  }
+
+
+
 }
 
 

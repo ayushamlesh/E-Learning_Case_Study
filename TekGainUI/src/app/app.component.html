@@ -1,3 +1,27 @@
- 
-   <!--Fill the code-->
-   
+
+<html>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <h1 class="navbar-brand">TekGain</h1>
+  </div>
+
+</nav>
+
+<div >
+  <mat-card class="card">
+    <mat-card-content  class="welcome">Welcome Admin !</mat-card-content>
+     <mat-card-content class="contant">
+      <button mat-raised-button class="button" routerLink="course"> Course</button>
+      <button mat-raised-button class="button" routerLink="admission"> Admission</button>
+      <button mat-raised-button class="button" routerLink="associate"> Associate</button>
+      <button mat-raised-button color="warn" (click)="onlogout()">Logout</button>
+
+     </mat-card-content>
+  </mat-card>
+
+</div>
+
+
+<router-outlet></router-outlet>
+</html>
+

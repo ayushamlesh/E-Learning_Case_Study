@@ -18,6 +18,7 @@ builder.Services.AddDiscoveryClient(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Course.API", Version = "v1" });
@@ -49,10 +50,16 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
+var serviceProvider = builder.Services.BuildServiceProvider();
+var logger = serviceProvider.GetService<ILogger<CourseRepository>>();
+builder.Services.AddSingleton(typeof(ILogger), logger);
+
 builder.Services.AddDbContext<TekGainContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
 
 // Configure the logging services
 builder.Logging.AddConsole();
@@ -74,6 +81,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

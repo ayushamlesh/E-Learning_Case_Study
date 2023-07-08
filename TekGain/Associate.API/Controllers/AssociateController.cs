@@ -13,57 +13,43 @@ namespace Associate.API.Controllers
     {
         // Implement the Services here
         private readonly IAssociateRepository _associateRepository;
+
         public AssociateController(IAssociateRepository associateRepository)
         {
             _associateRepository = associateRepository;
-
         }
 
-        [Authorize(Roles = "Admin,User")]
         [HttpGet("GetAssociateById/{id}")]
+        [Authorize(Roles = "User")]
         public IActionResult GetAssociateById(int id)
         {
-            try
+
+            var asot = _associateRepository.GetAssociateById(id);
+            if (asot != null)
             {
-                var associate = _associateRepository.GetAssociateById(id);
-                if (associate != null)
-                {
-                    return Ok(associate);
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return Ok(asot);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Invalid associate id");
             }
         }
 
-
-
-        [HttpGet("GetAllAssociate")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GetAllAssociate()
-        {
-            var result = _associateRepository.GetAllAssociate();
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else { return BadRequest("Failed to get Associates."); 
-            }
-        }
-
-        [Authorize(Roles = "Admin")]
         [HttpPost("AddAssociate")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddAssociate([FromBody] TekGain.DAL.Entities.Associate associate)
         {
             try
             {
-                _associateRepository.AddAssociate(associate);
-                return Ok();
+                var result = _associateRepository.AddAssociate(associate);
+                if (result)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
             }
             catch (Exception ex)
             {
@@ -71,14 +57,21 @@ namespace Associate.API.Controllers
             }
         }
 
+        [HttpPut("UpdateAssociate/{id}")]
         [Authorize(Roles = "Admin")]
-        [HttpPut("UpdateAssociateAddress/{id}")]
-        public IActionResult UpdateAssociateAddress(int id, [FromBody] string addr)
+        public IActionResult UpdateAssociate(int id, [FromBody] string addr)
         {
             try
             {
-                _associateRepository.UpdateAssociateAddress(id, addr);
-                return Ok();
+                var result = _associateRepository.UpdateAssociateAddress(id, addr);
+                if (result)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
             }
             catch (Exception ex)
             {

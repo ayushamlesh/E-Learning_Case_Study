@@ -9,37 +9,27 @@ namespace Login.API.Controllers
     [Produces("application/json")]
     public class AccountController : ControllerBase
     {
+
         // Implement the Services here
+        
         private readonly IAccountRepository _accountRepository;
         public AccountController(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
         }
-
-
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] SignUp signUpObj)
         {
             try
             {
-                var result = await _accountRepository.SignUp(signUpObj);
-
-                if (result.Succeeded)
-                {
-                    return Ok("User Account created");
-                }
-                else
-                {
-                    var errors = result.Errors.Select(e => e.Description);
-                    return BadRequest("Failed to create account");
-                }
+                await _accountRepository.SignUp(signUpObj);
+                return Ok("User Account created");
             }
             catch (Exception)
             {
                 return BadRequest("Failed to create account");
             }
         }
-
 
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] SignIn signInObj)
@@ -48,7 +38,7 @@ namespace Login.API.Controllers
             {
                 string token;
                 var result = await _accountRepository.SignIn(signInObj);
-                if (result == "Incorrect Email/Password")
+                if (result == "Failed")
                 {
                     return BadRequest("Failed to Login");
                 }

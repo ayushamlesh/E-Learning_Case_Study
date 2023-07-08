@@ -1,6 +1,7 @@
 ﻿using Course.API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TekGain.DAL.ErrorHandler;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,25 +14,29 @@ namespace Course.API.Controllers
     {
         // Implement the Services here
         private readonly ICourseRepository _courseRepository;
+
         public CourseController(ICourseRepository courseRepository)
         {
             _courseRepository = courseRepository;
         }
+
         [HttpPost("AddCourse")]
         [Authorize(Roles = "Admin")]
         public IActionResult AddCourse([FromBody] TekGain.DAL.Entities.Course course)
         {
-            var result = _courseRepository.AddCourse(course);
-            if (result != null)
+            // Call the AddCourse method of the CourseRepository
+            bool result = _courseRepository.AddCourse(course);
+
+            if (result)
             {
                 return Ok(result);
             }
-            else { return BadRequest("Failed to add course."); }
+
+            return BadRequest("AddCourse failure");
         }
 
-
         [HttpGet("GetAllCourse")]
-      [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public IActionResult GetAllCourse()
         {
             var result = _courseRepository.GetAllCourse();
@@ -39,63 +44,63 @@ namespace Course.API.Controllers
             {
                 return Ok(result);
             }
-            else { return BadRequest("Failed to get courses."); }
+            else
+            {
+                return BadRequest("GetAllCourse failure");
+            }
         }
 
-
-
         [HttpPut("UpdateCourse/{id}")]
-       [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateCourse(int id, [FromBody] int fee)
         {
             var result = _courseRepository.UpdateCourse(id, fee);
-            if (result != null)
+            if (result)
             {
                 return Ok(result);
             }
-            else { return BadRequest("Failed to update course."); }
+            else
+            {
+                return BadRequest("UpdateCourse failure");
+            }
         }
+
         [HttpGet("GetCourseById/{id}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetCourseById(int id)
         {
-            var result = _courseRepository.GetCourseById(id);
-            if (result != null)
-            { return Ok(result); }
-            else { return BadRequest("Failed to get course by id."); }
+            try
+            {
+                var result = _courseRepository.GetCourseById(id);
+                return Ok(result);
+            }
+            catch (ServiceException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpGet]
-        [Route("GetRating/{id}")]
-
+        [HttpGet("GetRating/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetRaiting(int id)
+        public IActionResult GetRating(int id)
         {
             var result = _courseRepository.GetRating(id);
-            if (result != null)
-            { return Ok(result); }
-            else { return BadRequest("Failed to get course raiting by  id."); }
+            return Ok(result);
         }
-
 
         [HttpPut("CalculateAverageRating/{id}/{rating}")]
         [Authorize(Roles = "Admin")]
         public IActionResult CalculateAverageRating(int id, double rating)
         {
             var result = _courseRepository.CalculateAverageRating(id, rating);
-            if (result != null)
+            if (result)
             {
                 return Ok(result);
             }
             else
             {
-                return BadRequest("Failed to calculate average rating.");
+                return BadRequest("CalculateAverageRating failure");
             }
         }
-
-    
-
-
-
     }
 }
