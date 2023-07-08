@@ -1,6 +1,7 @@
 ﻿using Admission.API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TekGain.DAL.ErrorHandler;
 
 namespace Admission.API.Controllers
 {
@@ -9,123 +10,128 @@ namespace Admission.API.Controllers
     [ApiController]
     public class AdmissionController : ControllerBase
     {
-        // Implement the Services here
         private readonly IAdmissionRepository _admissionRepository;
-        public AdmissionController(IAdmissionRepository admissionRepository)
+        private readonly ILogger<AdmissionController> _logger;
+
+        public AdmissionController(IAdmissionRepository admissionRepository, ILogger<AdmissionController> logger)
         {
             _admissionRepository = admissionRepository;
+            _logger = logger;
         }
 
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,User")]
+        [HttpGet("GetAllRegistration")]
+        public async Task<ActionResult<List<TekGain.DAL.Entities.Admission>>> GetAllRegistration()
+        {
+            var result = await _admissionRepository.GetAllRegistration();
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("Register/{associateId}/{courseId}")]
         public async Task<IActionResult> RegisterAssociateForCourse([FromRoute] int associateId, [FromRoute] int courseId)
         {
-            string bearerToken = HttpContext.Request.Headers["Authorization"];
-            var result = await _admissionRepository.RegisterAssociateForCourse(associateId, courseId, bearerToken);
-            if (result != null)
+            try
             {
+                string result = await _admissionRepository.RegisterAssociateForCourse(associateId, courseId, Request.Headers["Authorization"]);
+                _logger.LogInformation($"{DateTime.UtcNow} INFO : Course registration success Associate-{associateId} course-{courseId}");
                 return Ok(result);
             }
-            else
+            catch (ServiceException ex)
             {
-                return BadRequest("Failed to register associate for the course.");
+                return BadRequest(ex.Message);
             }
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("CalculateFees/{associateId}")]
         public async Task<IActionResult> CalculateFees([FromRoute] int associateId)
         {
-
-            var result = await _admissionRepository.CalculateFees(associateId);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest("Failed to calculate fees.");
-            }
+            double result = await _admissionRepository.CalculateFees(associateId);
+            _logger.LogTrace($"{DateTime.UtcNow} TRACE : Fee calculated associate-{associateId}");
+            return Ok(result);
         }
 
-        // [Authorize(Roles = "User")]
+        [Authorize(Roles = "User")]
         [HttpPost("Feedback/{id}/{feedback}/{feedbackRating}")]
-        public async Task<IActionResult> AddFeedback([FromRoute] int admissionId, [FromRoute] string feedback, [FromRoute] float feedbackRating)
+        public async Task<IActionResult> AddFeedback([FromRoute] int id, [FromRoute] string feedback, [FromRoute] float feedbackRating)
         {
-            string bearerToken = HttpContext.Request.Headers["Authorization"];
-            var result = await _admissionRepository.AddFeedback(admissionId, feedback, feedbackRating, bearerToken);
-            if (result != null)
+            try
             {
-                return Ok(result);
+                bool success = await _admissionRepository.AddFeedback(id, feedback, feedbackRating, Request.Headers["Authorization"]);
+                _logger.LogInformation($"{DateTime.UtcNow} INFO : Added Associate-{id}");
+                return Ok(success);
             }
-            else
+            catch (ServiceException ex)
             {
-                return BadRequest("Failed to add feedback.");
+                return BadRequest(ex.Message);
             }
         }
 
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("HighestFee/{associateId}")]
         public async Task<IActionResult> HighestFee([FromRoute] int associateId)
         {
-            var result = await _admissionRepository.HighestFee(associateId);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest("Failed to get the highest fee.");
-            }
+            double result = await _admissionRepository.HighestFee(associateId);
+            return Ok(result);
         }
 
-        // [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("ViewFeedbackByCourseId/{courseId}")]
         public async Task<IActionResult> ViewFeedbackByCourseId([FromRoute] int courseId)
         {
-            var result = await _admissionRepository.ViewFeedbackByCourseId(courseId);
-            if (result != null)
+            try
             {
+                var result = await _admissionRepository.ViewFeedbackByCourseId(courseId);
                 return Ok(result);
             }
-            else
+            catch (ServiceException ex)
             {
-                return BadRequest("Failed to view feedback by course ID.");
+                return BadRequest(ex.Message);
             }
         }
-        // [Authorize(Roles = "Admin")]
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeactivateAdmission/{courseId}")]
-        public async Task<IActionResult> DeactivateAdmission([FromRoute] int courseId)
+        public async Task<IActionResult> DeactivateAdmission(int courseId)
         {
-            string bearerToken = HttpContext.Request.Headers["Authorization"];
-            var result = await _admissionRepository.DeactivateAdmission(courseId, bearerToken);
-            if (result != null)
+            try
             {
-                return Ok(result);
-            }
-            else
-            {
+                string result = await _admissionRepository.DeactivateAdmission(courseId, Request.Headers["Authorization"]);
 
-                return BadRequest("Failed to deactivate admission.");
+                if (result != null)
+                {
+                    _logger.LogInformation($"{DateTime.UtcNow} INFO: Deactivated course-{courseId}");
+                    return Ok(result);
+                }
+
+                return NotFound();
+
+            }
+            catch (ServiceException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
-        // [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         [HttpPost("MakePayment/{admissionId}")]
         public async Task<IActionResult> MakePayment([FromRoute] int admissionId)
-
         {
-            string bearerToken = HttpContext.Request.Headers["Authorization"];
-            var result = await _admissionRepository.MakePayment(admissionId, bearerToken);
-            if (result != null)
+            try
             {
+                string result = await _admissionRepository.MakePayment(admissionId, Request.Headers["Authorization"]);
                 return Ok(result);
             }
-            else
+            catch (ServiceException ex)
             {
-                return BadRequest("Failed to make payment.");
+                return BadRequest(ex.Message);
             }
         }
-
     }
 }

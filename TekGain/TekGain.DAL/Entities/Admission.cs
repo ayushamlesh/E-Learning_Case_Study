@@ -12,7 +12,7 @@ namespace TekGain.DAL.Entities
         [Required]
         public int CourseId { get; set; }
         [Required]
-        public string status { get; set; }
+        public string Status { get; set; }
 
         public string Feedback { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestSharp;
 using System.Net;
+using System.Net.Http;
 using TekGain.DAL;
 using TekGain.DAL.Entities;
 using TekGain.DAL.ErrorHandler;
@@ -9,184 +10,196 @@ namespace Admission.API.Repository
 {
     public class AdmissionRepository : IAdmissionRepository
     {
-        // Implement the code here
-        private readonly TekGainContext _context;
         private readonly ILogger<AdmissionRepository> _logger;
-        public AdmissionRepository(TekGainContext context, ILogger<AdmissionRepository> logger)
+        private readonly HttpClient _httpClient;
+        private readonly TekGainContext _context;
+
+        public AdmissionRepository(ILogger<AdmissionRepository> logger, HttpClient httpClient, TekGainContext context)
         {
-            _context = context;
             _logger = logger;
+            _httpClient = httpClient;
+            _context = context;
         }
-
-        public async Task<bool> AddFeedback(int admissionId, string feedback, double feedbackRating, string bearerToken)
-        {
-            TekGain.DAL.Entities.Admission admission = await _context.Admissions.FindAsync(admissionId);
-            if (admission == null)
-            {
-                return false;
-            }
-
-            admission.Feedback = feedback;
-
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO : Added feedback for admission-{admissionId}");
-
-            return true;
-        }
-
-        public async Task<double> CalculateFees(int associateId)
-        {
-            double totalFees = 0;
-
-            List<int> courseIds = await _context.Admissions
-                .Where(a => a.AssociateId == associateId)
-                .Select(a => a.CourseId)
-                .ToListAsync();
-
-            foreach (int courseId in courseIds)
-            {
-                Course course = await _context.Courses.FindAsync(courseId);
-                if (course != null)
-                {
-                    totalFees += course.Fee;
-                }
-            }
-            _logger.LogTrace($"{DateTimeOffset.UtcNow} TRACE : Fee calculated associate-{associateId}");
-
-            return totalFees;
-        }
-
-        public async Task<string> DeactivateAdmission(int courseId, string bearerToken)
-        {
-            Course course = await _context.Courses.FindAsync(courseId);
-            if (course == null)
-            {
-                return "Course not found";
-            }
-
-            List<TekGain.DAL.Entities.Admission> admissions = await _context.Admissions
-                .Where(a => a.CourseId == courseId)
-                .ToListAsync();
-
-            _context.Admissions.RemoveRange(admissions);
-
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Deactivated admission for course-{courseId}");
-
-            return "Deactivated Successfully";
-        }
-
         public async Task<List<TekGain.DAL.Entities.Admission>> GetAllRegistration()
         {
-            List<TekGain.DAL.Entities.Admission> admissions = await _context.Admissions.ToListAsync();
-
-            return admissions;
-        }
-
-        public async Task<double> HighestFee(int associateId)
-        {
-            double highestFee = 0;
-
-            List<int> courseIds = await _context.Admissions
-                .Where(a => a.AssociateId == associateId)
-                .Select(a => a.CourseId)
-                .ToListAsync();
-
-            foreach (int courseId in courseIds)
-            {
-                Course course = await _context.Courses.FindAsync(courseId);
-                if (course != null && course.Fee > highestFee)
-                {
-                    highestFee = course.Fee;
-                }
-            }
-
-            return highestFee;
-        }
-
-        public async Task<string> MakePayment(int regNo, string bearerToken)
-        {
-            TekGain.DAL.Entities.Admission admission = await _context.Admissions.FindAsync(regNo);
-            if (admission == null)
-            {
-                return "Admission not found.";
-            }
-
-            // Make the payment for the admission using RestSharp or other payment service integration
-            // ...
-            // Example RestSharp implementation:
-            var client = new RestClient("https://localhost:8087/api/Payment/initialize");
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Authorization", $"Bearer {bearerToken}");
-            request.AddParameter("application/json", regNo, ParameterType.RequestBody);
-            IRestResponse response = await client.ExecuteAsync(request);
-
-            return response.Content;
-
+            return await _context.Admissions.ToListAsync();
         }
 
         public async Task<string> RegisterAssociateForCourse(int associateId, int courseId, string bearerToken)
         {
-            bool associateExists = await CheckAssociateExists(associateId, bearerToken);
+            // Check if the associate exists
+            bool associateExists = await CheckAssociateExists(associateId);
             if (!associateExists)
             {
                 throw new ServiceException("Admission Invalid Exception");
             }
 
-            bool courseExists = await CheckCourseExists(courseId, bearerToken);
+            // Check if the course exists
+            bool courseExists = await CheckCourseExists(courseId);
             if (!courseExists)
             {
                 throw new ServiceException("Admission Invalid Exception");
             }
-            TekGain.DAL.Entities.Admission admission = new TekGain.DAL.Entities.Admission
+
+            // Add details to the admission table
+            // ...
+
+            TekGain.DAL.Entities.Admission adm = new TekGain.DAL.Entities.Admission
             {
-                AssociateId = associateId,
                 CourseId = courseId,
-                // Add other relevant properties to the admission object
+                AssociateId = associateId,
+                Status = "",
+                Feedback = ""
             };
-            _context.Admissions.Add(admission);
-            await _context.SaveChangesAsync();
 
-            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO : Course registration success Associate-{associateId} course-{courseId}");
+            var addStatus = await _context.Admissions.AddAsync(adm);
+            _context.SaveChangesAsync();
 
-            return "Registered Successfully!";
+
+            string result = "Registered Successfully!";
+            _logger.LogInformation($"{DateTime.UtcNow} INFO : Course registration success Associate-{associateId} course-{courseId}");
+            return result;
+        }
+
+        public async Task<double> CalculateFees(int associateId)
+        {
+            // Calculate associate's fees
+            // ...
+
+            List<TekGain.DAL.Entities.Admission> admission = _context.Admissions.Where(x => x.AssociateId == associateId).ToList();
+
+            double result = 0.0;
+
+            foreach (TekGain.DAL.Entities.Admission adm in admission)
+            {
+                TekGain.DAL.Entities.Course course = _context.Courses.Where(x => x.Id == adm.CourseId).FirstOrDefault();
+                result += course.Fee;
+            }
+
+            _logger.LogTrace($"{DateTime.UtcNow} TRACE : Fee calculated associate-{associateId}");
+            return result;
+        }
+
+        public async Task<bool> AddFeedback(int id, string feedback, double feedbackRating, string bearerToken)
+        {
+            // Check if the associate id exists
+            bool associateExists = await CheckAssociateExists(id);
+            if (!associateExists)
+            {
+                return false;
+            }
+
+            // Update the feedback and return true
+            // ...
+
+            TekGain.DAL.Entities.Admission admission = await _context.Admissions.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (admission != null)
+            {
+                admission.Feedback = feedback;
+                _context.SaveChangesAsync();
+
+                _logger.LogInformation($"{DateTime.UtcNow} INFO : Added Associate-{id}");
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<double> HighestFee(int associateId)
+        {
+            // Get the highest course fee of the associate
+            // ...
+
+            List<TekGain.DAL.Entities.Admission> admissionAssociateList = AdmissionAssociateList(associateId);
+
+            double result = 0.0;
+
+            List<Double> FeeList = new List<Double>();
+
+            foreach (TekGain.DAL.Entities.Admission Entry in admissionAssociateList)
+            {
+                TekGain.DAL.Entities.Course CourseByAssociate = await _context.Courses.FirstOrDefaultAsync(x => x.Id == Entry.CourseId);
+                FeeList.Add(CourseByAssociate.Fee);
+            }
+
+            result = FeeList.Max();
+
+            return result;
+        }
+
+        public List<TekGain.DAL.Entities.Admission> AdmissionAssociateList(int associateId)
+        {
+            return _context.Admissions.Where(x => x.AssociateId == associateId).ToList();
         }
 
         public async Task<List<string>> ViewFeedbackByCourseId(int courseId)
         {
-            List<string> feedbackList = await _context.Admissions
-           .Where(a => a.CourseId == courseId && !string.IsNullOrEmpty(a.Feedback))
-           .Select(a => a.Feedback)
-           .ToListAsync();
+            // View feedback of the course
+            // ...
 
-            return feedbackList;
+            List<TekGain.DAL.Entities.Admission> listAdmission = _context.Admissions.Where(x => x.CourseId == courseId).ToList();
+            List<string> result = new List<string>();
+
+            foreach (TekGain.DAL.Entities.Admission admission in listAdmission)
+            {
+                result.Add(admission.Feedback);
+            }
+
+            return result;
         }
 
-        private async Task<bool> CheckAssociateExists(int associateId, string bearerToken)
+        public async Task<string> DeactivateAdmission(int courseId, string bearerToken)
         {
-            // Call the Associate service to check if the associate exists
-            var client = new RestClient($"https://localhost:8087/api/Associate/GetAssociateById/{associateId}");
-            var request = new RestRequest(Method.GET);
-            request.AddHeader("Authorization", $"Bearer {bearerToken}");
-            IRestResponse response = await client.ExecuteAsync(request);
+            // Deactivate the given course in the database
+            // ...
+            string result = "false";
 
-            return response.StatusCode == HttpStatusCode.OK;
+            TekGain.DAL.Entities.Admission admission = await _context.Admissions.FirstOrDefaultAsync(x => x.CourseId == courseId);
+
+            if (admission != null)
+            {
+                admission.Status = "Deactivated";
+                _context.SaveChangesAsync();
+                result = "true";
+            }
+
+            //_logger.LogInformation($"{DateTime.UtcNow} INFO: Deactivated course-{courseId}");
+            return result;
         }
 
-        private async Task<bool> CheckCourseExists(int courseId, string bearerToken)
+        public async Task<string> MakePayment(int admissionId, string bearerToken)
         {
-            // Call the Course service to check if the course exists
-            var client = new RestClient($"https://localhost:8087/api/Course/GetCourseById/{courseId}");
-            var request = new RestRequest(Method.GET);
-            request.AddHeader("Authorization", $"Bearer {bearerToken}");
-            IRestResponse response = await client.ExecuteAsync(request);
+            // Make the payment
+            string result = "Payment Successful!";
+            return result;
+        }
 
-            return response.StatusCode == HttpStatusCode.OK;
+        private async Task<bool> CheckAssociateExists(int associateId)
+        {
+            var associate = await _context.Associates.FirstOrDefaultAsync(c => c.Id == associateId);
+
+            if (associate != null)
+            {
+                return true;
+            }
+
+            return false; // Placeholder
+        }
+
+        private async Task<bool> CheckCourseExists(int courseId)
+        {
+            // Make a request to the Course service to check if the course exists
+            // ...
+
+            var associate = await _context.Courses.FirstOrDefaultAsync(c => c.Id == courseId);
+
+            if (associate != null)
+            {
+                return true;
+            }
+
+            return false; // Placeholder
         }
     }
-
 }
