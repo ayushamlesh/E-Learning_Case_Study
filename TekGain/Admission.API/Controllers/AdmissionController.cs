@@ -13,6 +13,7 @@ namespace Admission.API.Controllers
         private readonly IAdmissionRepository _admissionRepository;
         private readonly ILogger<AdmissionController> _logger;
 
+
         public AdmissionController(IAdmissionRepository admissionRepository, ILogger<AdmissionController> logger)
         {
             _admissionRepository = admissionRepository;
