@@ -22,8 +22,16 @@ namespace Login.API.Controllers
         {
             try
             {
-                await _accountRepository.SignUp(signUpObj);
-                return Ok("User Account created");
+                var result=await _accountRepository.SignUp(signUpObj);
+
+                if (result.Succeeded)
+                {
+                    return Ok("User Account created");
+                }
+                else
+                {
+                    return BadRequest("Failed to create account");
+                }
             }
             catch (Exception)
             {
