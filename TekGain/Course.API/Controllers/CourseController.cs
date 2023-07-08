@@ -32,7 +32,9 @@ namespace Course.API.Controllers
                 return Ok(result);
             }
 
-            return BadRequest("AddCourse failure");
+//            return BadRequest("AddCourse failure");
+            return BadRequest(result);
+
         }
 
         [HttpGet("GetAllCourse")]
@@ -61,12 +63,13 @@ namespace Course.API.Controllers
             }
             else
             {
-                return BadRequest("UpdateCourse failure");
+                return BadRequest(result);
+                //return BadRequest("UpdateCourse failure");
             }
         }
 
         [HttpGet("GetCourseById/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,User")]
         public IActionResult GetCourseById(int id)
         {
             try
@@ -81,11 +84,14 @@ namespace Course.API.Controllers
         }
 
         [HttpGet("GetRating/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,User")]
         public IActionResult GetRating(int id)
         {
             var result = _courseRepository.GetRating(id);
-            return Ok(result);
+            if (result!=0)
+            { return Ok(result); }
+            else
+            { return BadRequest(result); }
         }
 
         [HttpPut("CalculateAverageRating/{id}/{rating}")]
@@ -99,7 +105,8 @@ namespace Course.API.Controllers
             }
             else
             {
-                return BadRequest("CalculateAverageRating failure");
+                return BadRequest(result);
+                // return BadRequest("CalculateAverageRating failure");
             }
         }
     }
