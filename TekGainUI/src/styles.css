@@ -96,3 +96,6 @@ color:White;
     height:300px;
     background-color: #16A085 ;
   }	 	  	  		    	   	 	   	 	
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

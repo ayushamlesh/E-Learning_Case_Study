@@ -1,1 +1,22 @@
-<!--Fill the code-->
+
+<h1>Login</h1>
+<form (ngSubmit)="onClickSubmit()">
+  <div>
+    <label for="email">Email</label>
+    <br>
+    <input type="text" id="email" name="email" [(ngModel)]="user.Email" required>
+    <!-- <div *ngIf="!user.email && isFormSubmitted" style="color:red;">Email required!</div> -->
+
+  </div>
+  <div>
+    <label for="password">Password</label>
+    <br>
+    <input type="password" id="password" name="password" [(ngModel)]="user.Password" required>
+    <br>
+    <div *ngIf="!user.Password && isFormSubmitted" style="color:red;">Password required!</div>
+    <button type="submit" id="login">Sign in</button>
+
+  </div>
+</form>
+
+

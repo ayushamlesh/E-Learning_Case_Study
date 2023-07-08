@@ -8,105 +8,109 @@ using TekGain.DAL.Entities;
 
 namespace Login.API.Repository
 {
+
     public class AccountRepository : IAccountRepository
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
+        // Implement the code here
+        private readonly UserManager<User> _um;
+        private readonly RoleManager<IdentityRole> _rm;
         private readonly ILogger<AccountRepository> _logger;
-
-        public AccountRepository(
-            ILogger<AccountRepository> logger,
-            UserManager<User> userManager,
-            RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+        private readonly IConfiguration _configuration;
+        public AccountRepository(UserManager<User> usermanager, RoleManager<IdentityRole> rolemanager, IConfiguration configuration, ILogger<AccountRepository> logger)
         {
+            _um = usermanager;
+            _rm = rolemanager;
             _logger = logger;
-            _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
         }
-
-
+        public static class UserRole
+        {
+            public const string Admin = "Admin";
+            public const string User = "User";
+        }
         public async Task<IdentityResult> SignUp(SignUp signUpObj)
         {
-            // You can add your implementation or checks here
-
-            // Check if the email already exists
-            var existingUser = await _userManager.FindByEmailAsync(signUpObj.Email);
-            if (existingUser != null)
+            var userExists = await _um.FindByEmailAsync(signUpObj.Email);
+            if (userExists != null)
             {
-                _logger.LogWarning($"{DateTime.Now} WAR: Sign up failed: Email '{signUpObj.Email}' already exists");
-                return IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
+                return IdentityResult.Failed();
             }
 
-            var user = new User
+            User user = new()
             {
-                UserName = signUpObj.Email,
                 Email = signUpObj.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = signUpObj.Email,
                 FirstName = signUpObj.FirstName,
-                LastName = signUpObj.LastName
+                LastName = signUpObj.LastName,
             };
-            var result = await _userManager.CreateAsync(user, signUpObj.Password);
 
-            if (result.Succeeded)
+            var CreateUserResult = await _um.CreateAsync(user, signUpObj.Password);
+            if (!CreateUserResult.Succeeded)
             {
-                await _roleManager.CreateAsync(new IdentityRole("Admin"));
-                await _roleManager.CreateAsync(new IdentityRole("User"));
-
-                await _userManager.AddToRoleAsync(user, "User");
-
-                _logger.LogInformation($"{DateTime.Now} INFO: Registration completed for {signUpObj.Email}");
+                return IdentityResult.Failed();
+            }
+            if (!await _rm.RoleExistsAsync(UserRole.User))
+            {
+                await _rm.CreateAsync(new IdentityRole(UserRole.User));
             }
 
-            return result;
+            if (await _rm.RoleExistsAsync(UserRole.User))
+            {
+                await _um.AddToRoleAsync(user, UserRole.User);
+            }
+
+            _logger.LogInformation($"{DateTime.Now} INFO: Registration completed for {signUpObj.Email}");
+
+            return IdentityResult.Success;
+
         }
 
-        
+        public async Task<string> SignIn(SignIn signInObj)
+        {
+            var user = await _um.FindByEmailAsync(signInObj.Email);
+            if (user == null)
+            {
+                _logger.LogWarning($"{DateTime.Now} WAR: Sign failed : {signInObj.Email}");
+                return "Incorrect Email/Password";
+            }
+            if (!await _um.CheckPasswordAsync(user, signInObj.Password))
+            {
+                _logger.LogWarning($"{DateTime.Now} WAR: Sign failed : {signInObj.Email}");
+                return "Incorrect Email/Password";
+            }
 
-        
+            var userRoles = await _um.GetRolesAsync(user);
+            var authClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+            };
 
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+            string token = GenerateToken(authClaims);
+            _logger.LogInformation($"{DateTime.Now} INFO: Sign success {signInObj.Email}");
+            return token;
+        }
 
+        private string GenerateToken(IEnumerable<Claim> claims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _configuration["JWT:ValidIssuer"],
+                Audience = _configuration["JWT:ValidAudience"],
+                Expires = DateTime.UtcNow.AddMinutes(45),
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
+                Subject = new ClaimsIdentity(claims)
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
-         public async Task<string> SignIn(SignIn signInObj)
-          {
-              var user = await _userManager.FindByEmailAsync(signInObj.Email);
-              if (user == null || !await _userManager.CheckPasswordAsync(user, signInObj.Password))
-              {
-                  _logger.LogWarning($"{DateTime.Now} WAR: Sign failed : {signInObj.Email}");
-                  return "Incorrect Email/Password";
-              }
-
-              var roles = await _userManager.GetRolesAsync(user);
-              var claims = new List<Claim>
-              {
-                  new Claim(ClaimTypes.Email, user.Email),
-
-
-          };
-
-              foreach (var role in roles)
-              {
-                  claims.Add(new Claim(ClaimTypes.Role, role));
-              }
-
-              var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-              var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-              var expires = DateTime.Now.AddDays(Convert.ToInt32(_configuration["JWT:TokenExpirationDays"]));
-              var token = new JwtSecurityToken(
-                  _configuration["JWT:ValidIssuer"],
-                  _configuration["JWT:ValidAudience"],
-                  claims,
-                  expires: expires,
-                  signingCredentials: credentials
-              );
-              var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-              _logger.LogInformation($"{DateTime.Now} INFO: Sign success {signInObj.Email}");
-              return tokenString;
-          }
-
-      
-
+            return tokenHandler.WriteToken(token);
+        }
     }
 }

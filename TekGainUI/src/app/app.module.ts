@@ -16,7 +16,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTableModule} from '@angular/material/table';
 import {FormsModule} from '@angular/forms';
-import {  ReactiveFormsModule } from '@angular/forms';  
+import {  ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { CourseComponent } from './course/course.component';
@@ -25,15 +25,15 @@ import { AssociateComponent } from './associate/associate.component';
 import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
-  
+
    //   Fill the code fro routing
-   
+
 ];
 
-@NgModule({	 	  	  		    	   	 	   	 	
+@NgModule({
   declarations: [
     AppComponent,
-    CourseComponent,    
+    CourseComponent,
     AdmissionComponent,
     AssociateComponent,
     LoginComponent
@@ -43,7 +43,7 @@ export const routes: Routes = [
     AppRoutingModule,FormsModule,ReactiveFormsModule,HttpClientModule,
     BrowserAnimationsModule,MatFormFieldModule,MatInputModule,MatProgressSpinnerModule,MatTableModule,
 	MatFormFieldModule,MatInputModule,MatProgressSpinnerModule,MatTableModule,
-    MatButtonModule,MatToolbarModule,MatCardModule,  MatButtonModule, MatCardModule, 
+    MatButtonModule,MatToolbarModule,MatCardModule,  MatButtonModule, MatCardModule,
     MatIconModule,MatSidenavModule,MatListModule,RouterModule.forRoot(routes)
   ],
   providers: [],

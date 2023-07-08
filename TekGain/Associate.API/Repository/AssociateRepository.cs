@@ -6,107 +6,60 @@ namespace Associate.API.Repository
     public class AssociateRepository : IAssociateRepository
     {
         // Implement the code here
+
         private readonly TekGainContext _context;
         private readonly ILogger<AssociateRepository> _logger;
-
 
         public AssociateRepository(TekGainContext context, ILogger<AssociateRepository> logger)
         {
             _context = context;
             _logger = logger;
         }
-
-        public TekGain.DAL.Entities.Associate GetAssociateById(int id)
-        {
-            try
-            {
-                var associate = _context.Associates.Find(id);
-                if (associate != null)
-                {
-                    return associate;
-                }
-                else
-                {
-                    throw new ServiceException("Invalid Associate Id");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while retrieving associate by ID");
-                throw;
-            }
-        }
-
-
         public List<TekGain.DAL.Entities.Associate> GetAllAssociate()
         {
-            try
-            {
-                var associate = _context.Associates.ToList();
-                if (associate != null)
-                {
-                    return associate;
-                }
-                else
-                {
-                    throw new ServiceException("NO Associate Available");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while retrieving associate by ID");
-                throw;
-            }
+            return _context.Associates.ToList();
         }
-
         public bool AddAssociate(TekGain.DAL.Entities.Associate associate)
         {
-            try
+            bool associateExists = _context.Associates.Any(c => string.Equals(c.Email, associate.Email));
+
+            if (associateExists)
             {
-                var existingAssociate = _context.Associates.FirstOrDefault(a => a.Email == associate.Email);
-                if (existingAssociate != null)
-                {
-                    return false; // Associate with the same email already exists
-                }
-
-                _context.Associates.Add(associate);
-                _context.SaveChanges();
-
-                _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Added Associate - {associate}");
-
-                return true;
+                return false;
             }
-            catch (Exception ex)
+
+            _context.Associates.Add(associate);
+            _context.SaveChanges();
+            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Added course-{associate}");
+            return true;
+        }
+        public TekGain.DAL.Entities.Associate? GetAssociateById(int id)
+        {
+            var a = _context.Associates.FirstOrDefault(c => c.Id == id);
+            if (a != null)
             {
-                _logger.LogError(ex, "Error occurred while adding associate");
-                throw;
+                return a;
+            }
+            else
+            {
+                throw new ServiceException("Invalid Associate Id");
             }
         }
-
         public bool UpdateAssociateAddress(int id, string addr)
         {
-            try
+            var result = _context.Associates.FirstOrDefault(c => c.Id == id);
+            if (result == null)
             {
-                var associate = _context.Associates.Find(id);
-                if (associate == null)
-                {
-                    return false; // Associate with the given ID does not exist
-                }
-
-                associate.Address = addr;
-                _context.SaveChanges();
-
-                _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Updated Associate - {associate}");
-
-                return true;
+                return false;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while updating associate address");
-                throw;
-            }
+            result.Address = addr;
+            _context.SaveChanges();
+
+
+            _logger.LogInformation($"{DateTime.Now} INFO: Updated Associate-{id}");
+
+
+            return true;
         }
-
-    
     }
 }
