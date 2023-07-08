@@ -50,7 +50,8 @@ namespace Login.API.Repository
             {
                 return IdentityResult.Failed();
             }
-            if (!await _rm.RoleExistsAsync(UserRole.User))
+           
+            /*if (!await _rm.RoleExistsAsync(UserRole.User))
             {
                 await _rm.CreateAsync(new IdentityRole(UserRole.User));
             }
@@ -59,6 +60,19 @@ namespace Login.API.Repository
             {
                 await _um.AddToRoleAsync(user, UserRole.User);
             }
+            */
+
+            //for admin
+            if (!await _rm.RoleExistsAsync(UserRole.Admin))
+            {
+                await _rm.CreateAsync(new IdentityRole(UserRole.Admin));
+            }
+
+            if (await _rm.RoleExistsAsync(UserRole.Admin))
+            {
+                await _um.AddToRoleAsync(user, UserRole.Admin);
+            }
+            //end admin
 
             _logger.LogInformation($"{DateTime.Now} INFO: Registration completed for {signUpObj.Email}");
 
