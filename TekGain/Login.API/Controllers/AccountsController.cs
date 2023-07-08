@@ -40,7 +40,7 @@ namespace Login.API.Controllers
                 var result = await _accountRepository.SignIn(signInObj);
                 if (result == "Failed")
                 {
-                    return BadRequest("Failed to Login");
+                    return BadRequest("Failed to login");
                 }
                 return Ok(result);
             }

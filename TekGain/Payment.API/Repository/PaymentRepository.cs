@@ -36,7 +36,7 @@ namespace Payment.API.Repository
 
                 // Return order attributes
                 //return order.Attributes.ToString();
-                return "Payment Initialized";
+                return "\"Payment Initialized\"";
             }
             catch (Exception ex)
             {
