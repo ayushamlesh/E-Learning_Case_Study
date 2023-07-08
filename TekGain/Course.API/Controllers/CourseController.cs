@@ -80,6 +80,8 @@ namespace Course.API.Controllers
             catch (ServiceException ex)
             {
                 return BadRequest(ex.Message);
+
+
             }
         }
 
