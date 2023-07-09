@@ -9,33 +9,35 @@ import jwt_decode from "jwt-decode";
   providedIn: 'root'
 })
 export class AuthService {
-  
+
   login(user: User): any {
 
-    
+
    //   Fill the code
-    return false;
+
   }
-  
-  
+
+
   getToken(): any {
-     
+
    //   Fill the code
-   return "";
+
   }
 
   logout(): void {
-    
+
    //   Fill the code
-   
+
   }
   getRole(): any {
 
-    
+
    //   Fill the code
-   return "";
+
+
    }
   constructor(private http: HttpClient) {
-   
-  }	 	  	  		    	   	 	   	 	
+
+  }
+
 }
