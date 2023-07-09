@@ -107,7 +107,7 @@ namespace Login.API.Repository
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
             string token = GenerateToken(authClaims);
-            _logger.LogInformation($"{DateTime.Now} INFO : Sign success {signInObj.Email}");
+            _logger.LogInformation($"{DateTime.Now} INFO: Sign success {signInObj.Email}");
             return token;
         }
 
