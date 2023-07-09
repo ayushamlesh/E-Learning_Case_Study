@@ -1,5 +1,8 @@
 ﻿using Login.API.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using TekGain.DAL.Entities;
 
 namespace Login.API.Controllers
@@ -44,18 +47,23 @@ namespace Login.API.Controllers
         {
             try
             {
-                string token;
+                
                 var result = await _accountRepository.SignIn(signInObj);
-                if (result == "Failed")
+                if (result == "Failed" | result== "Incorrect Email/Password")
                 {
                     return BadRequest("Failed to login");
                 }
+           
                 return Ok(result);
-            }
+                
+             }
             catch (Exception)
             {
                 return BadRequest("Failed to login");
             }
         }
+
+
+
     }
 }
