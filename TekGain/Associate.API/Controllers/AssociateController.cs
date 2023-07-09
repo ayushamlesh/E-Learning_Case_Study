@@ -20,7 +20,7 @@ namespace Associate.API.Controllers
         }
 
         [HttpGet("GetAssociateById/{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetAssociateById(int id)
         {
 
@@ -57,9 +57,9 @@ namespace Associate.API.Controllers
             }
         }
 
-        [HttpPut("UpdateAssociate/{id}")]
+        [HttpPut("UpdateAssociateAddress/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult UpdateAssociate(int id, [FromBody] string addr)
+        public IActionResult UpdateAssociateAddress(int id, [FromBody] string addr)
         {
             try
             {

@@ -15,8 +15,8 @@ using Microsoft.Extensions.Configuration.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 
+// Add services to the container.
 builder.Services.AddDiscoveryClient(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -46,8 +46,6 @@ builder.Services.AddSwaggerGen(c =>
                     }
     });
 });
-
-
 var serviceProvider = builder.Services.BuildServiceProvider();
 var logger = serviceProvider.GetService<ILogger<AccountRepository>>();
 builder.Services.AddSingleton(typeof(ILogger), logger);
@@ -62,9 +60,10 @@ builder.Services.AddTransient<TekGainContext>();
 
 // Implement the dependency containers
 
-
+// Implement the authentication scheme for jwt
 
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+
 
 // Implement the authentication scheme for JWT
 builder.Services.AddAuthentication(options =>
@@ -87,6 +86,7 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
         };
     });
+
 
 var app = builder.Build();
 
