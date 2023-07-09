@@ -78,7 +78,6 @@ namespace Course.API.Repository
             {
                 return 0;
             }
-
             return course.Rating;
         }
 
