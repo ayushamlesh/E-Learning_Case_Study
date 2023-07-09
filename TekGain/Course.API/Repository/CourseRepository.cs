@@ -49,8 +49,8 @@ namespace Course.API.Repository
             _context.Courses.Add(course);
             _context.SaveChanges();
 
-            _logger.LogInformation($"{DateTime.Now} INFO: Added course-{course.Name}");
-
+           // _logger.LogInformation($"{DateTime.Now} INFO: Added course-{course.Name}");
+            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Added course-{course.Name}");
             return true;
         }
 
@@ -65,8 +65,8 @@ namespace Course.API.Repository
 
             course.Fee = fee;
             _context.SaveChanges();
-            _logger.LogInformation($"{DateTime.Now} INFO: Updated course fee course-{id}");
-
+           // _logger.LogInformation($"{DateTime.Now} INFO: Updated course fee course-{id}");
+            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Updated course fee course-{id}");
             return true;
         }
 
@@ -94,8 +94,8 @@ namespace Course.API.Repository
 
             course.Rating = averageRating;
             _context.SaveChanges();
-            _logger.LogInformation($"{DateTime.Now} INFO: Updated course ratings course-{id}");
-
+            //_logger.LogInformation($"{DateTime.Now} INFO: Updated course ratings course-{id}");
+            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Updated course ratings course-{id}");
             return true;
         }
     }
