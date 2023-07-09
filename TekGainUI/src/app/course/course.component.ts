@@ -40,53 +40,56 @@ export class CourseComponent implements OnInit {
 
   @Input() title: string = '';
 
-  ngOnInit() {	 	  	  		    	   	 	   	 	
+  ngOnInit() {
 
 //   Fill the code
-  }
+this.sub = this._Activatedroute.queryParams.subscribe(params => {
+  this.paramFlag = params['paramFlag'];
+});
+}
 
   ngOnDestroy() {
-  
+
    //   Fill the code
-   
-   
+
+
   }
 
   constructor(private courseService: CourseService, private router: Router, private _Activatedroute: ActivatedRoute) { }
 
   addCourse(): void {
-     
+
    //   Fill the code
-   
-   
+
+
 
   }
 
 
   updateCourse(): void {
 
-   
+
    //   Fill the code
-   
+
      }
 
-  
 
-  viewCourseById(): void {	 	  	  		    	   	 	   	 	
-     
+
+  viewCourseById(): void {
+
    //   Fill the code
-   
+
 
   }
 
   viewRatings() {
-    
+
    //   Fill the code
-   
+
   }
 
- 
 
- 
 
-}	 	  	  		    	   	 	   	 	
+
+
+}

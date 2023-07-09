@@ -14,16 +14,31 @@ export class LoginComponent implements OnInit {
 
   @Input() user:any=new User('','');
   message:string="";
+  isFormSubmitted = false;
+
   constructor(private authService : AuthService, private router : Router) { }
 
    ngOnInit() {
-    
+
    }
 
-   onClickSubmit() {	 	  	  		    	   	 	   	 	
-      
+   onClickSubmit() {
+
    //   Fill the code
-   
-     
+   this.isFormSubmitted = true;
+   this.authService.login(this.user)
+   .subscribe({
+     next:() => {
+       this.authService.getRole();
+
+       console.log("Logged in successfully");
+       this.router.navigate(['course']);
+     },
+     error:() => {
+       this.message = "Invalid email/password";
+       alert("Invalid email/password");
+                 }
+            });
+
    }
 }
