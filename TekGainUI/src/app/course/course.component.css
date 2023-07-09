@@ -4,9 +4,29 @@ table{
 .mat-card {
     background: rgb(130, 130, 133);
     height:700px;
-    
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
     /* color: rgb(116, 110, 110); */
 }
-.mat-list-item{
-    width:250px;
+
+.mat-list-item {
+  width: 250px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
 }
+
+h2{
+  margin-top:0px;
+  margin-left:0px;
+  margin-right:auto;
+  color:White;
+  }
+  .mat-drawer {
+    background-color: #138D75 ;
+    color: #fff;
+    width: 150px;
+  }

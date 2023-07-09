@@ -1,6 +1,6 @@
 div{
   text-align: center;
-
+  align-self: center;
 }
 
 
@@ -9,5 +9,5 @@ h1{
 }
 
 button{
-  color: blue;
+  background-color: blue;
 }

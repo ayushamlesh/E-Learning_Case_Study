@@ -1,6 +1,6 @@
 <!--Fill the code-->
 <!--Fill the code-->
-<div class="main-container">
+<div>
   <div class=".mat-list-item">
     <!-- Add Course Menu -->
     <ul>
@@ -17,7 +17,7 @@
   </ul>
   </div>
 
-<div class="main-container">
+<div class="mat-card">
 <h2>Course Management</h2>
 <!-- Card content goes here -->
 
@@ -30,18 +30,22 @@
 <form (ngSubmit)="addCourse()">
   <div>
     <label for="name">Course Name*</label>
+    <br>
     <input type="text" id="name" [(ngModel)]="name" required />
   </div>
   <div>
     <label for="fee">Fee*</label>
+    <br>
     <input type="number" id="fee" [(ngModel)]="fee" required min="20" max="100" />
   </div>
   <div>
     <label for="duration">Duration in Days*</label>
+    <br>
     <input type="number" id="duration" [(ngModel)]="duration" required />
   </div>
   <div>
     <label for="type">Course Type*</label>
+    <br>
     <input type="text" id="type" [(ngModel)]="type" required />
   </div>
   <button type="submit">Add Course</button>
@@ -52,18 +56,20 @@
 </div>
 
 <!-- Update Course Fee -->
-<div class="mat-card" *ngIf="paramFlag === 2">
+<div class="mat-card" *ngIf="paramFlag == 2">
 <h2>Update Course Fee</h2>
 
 <form (ngSubmit)="updateCourse()">
   <div>
     <label for="name">Course Name*</label>
+    <br>
     <select id="name" [(ngModel)]="name" required>
       <option *ngFor="let course of courses" [value]="course.name">{{ course.name }}</option>
     </select>
   </div>
   <div>
     <label for="fee">Fee*</label>
+    <br>
     <input type="number" id="fee" [(ngModel)]="fee" required />
   </div>
   <button type="submit">Update Course</button>
@@ -74,12 +80,13 @@
 </div>
 
 <!-- View Course By Name -->
-<div class="mat-card" *ngIf="paramFlag === 3">
+<div class="mat-card" *ngIf="paramFlag == 3">
 <h2>View Course Details by Name</h2>
 
 <form (ngSubmit)="viewCourseById()">
   <div>
     <label for="name">Course Name*</label>
+    <br>
     <select id="name" [(ngModel)]="name" required>
       <option *ngFor="let course of courses" [value]="course.name">{{ course.name }}</option>
     </select>
@@ -108,12 +115,13 @@
 </div>
 
 <!-- Ratings -->
-<div class="mat-card" *ngIf="paramFlag === 4">
+<div class="mat-card" *ngIf="paramFlag == 4">
 <h2>Course Feedback Ratings</h2>
 
 <form (ngSubmit)="viewRatings()">
   <div>
     <label for="name">Course Name*</label>
+    <br>
     <select id="name" [(ngModel)]="name" required>
       <option *ngFor="let course of courses" [value]="course.name">{{ course.name }}</option>
     </select>
