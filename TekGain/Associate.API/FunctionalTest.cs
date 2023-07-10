@@ -20,6 +20,8 @@ using Microsoft.Extensions.Logging.Console;
 using RestClient = RestSharp.RestClient;
 using Associate.API.Repository;
 using NUnit.Framework.Internal;
+using TekGain.DAL.ErrorHandler;
+using System.Linq;
 
 namespace Associate.API
 {
@@ -28,6 +30,18 @@ namespace Associate.API
     {
         // NOTE :
         // 1. SHOULD NOT CHANGE THE TESTCASE NAME
+        private Mock<TekGainContext> _mockContext;
+        private Mock<ILogger<AssociateRepository>> _mockLogger;
+        private AssociateRepository _associateRepository;
+
+        [SetUp]
+        public void Setup()
+        {
+            _mockContext = new Mock<TekGainContext>();
+            _mockLogger = new Mock<ILogger<AssociateRepository>>();
+            _associateRepository = new AssociateRepository(_mockContext.Object, _mockLogger.Object);
+        }
+
         // 2. iMPLEMENT THE TESTCASE AS PER THE REQUIREMENT MENTIONED THE EACH TESTCAESE
 
         [Test, Order(1)]
@@ -37,7 +51,9 @@ namespace Associate.API
             // TEST THE ASSOCIATE REPOSITORY 'ADDASSOCIATE' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
             // Arrange
-           
+        
+
+
         }
 
         [Test, Order(2)]
@@ -46,6 +62,8 @@ namespace Associate.API
             // REQUIREMENT :
             // TEST THE ASSOCIATE REPOSITORY 'GETASSOCIATEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
+          
+
         }
 
         [Test, Order(3)]
@@ -54,7 +72,9 @@ namespace Associate.API
             // REQUIREMENT :
             // TEST THE ASSOCIATE REPOSITORY 'GETASSOCIATEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-        }
+            
+    }
+    
 
         [Test, Order(4)]
         public void Test4_TDD_Invoke_UpdateAssociateAddress_Method_ForValid()
@@ -62,6 +82,8 @@ namespace Associate.API
             // REQUIREMENT :
             // TEST THE ASSOCIATE REPOSITORY 'UPDATEASSOCIATEADDRESS' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
+             bool result= _associateRepository.UpdateAssociateAddress(1, "nke");
+            Assert.IsTrue(result);
         }
 
         [Test, Order(5)]

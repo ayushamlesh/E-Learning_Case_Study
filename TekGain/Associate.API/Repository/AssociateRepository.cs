@@ -52,9 +52,11 @@ namespace Associate.API.Repository
             {
                 return false;
             }
-            result.Address = addr;
-            _context.SaveChanges();
-
+            else
+            {
+                result.Address = addr;
+                _context.SaveChanges();
+            }
 
             //_logger.LogInformation($"{DateTime.Now} INFO: Updated Associate address associate-{id}");
             _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Updated Associate address associate-{id}");

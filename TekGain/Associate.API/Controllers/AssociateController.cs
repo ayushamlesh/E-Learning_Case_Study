@@ -19,6 +19,22 @@ namespace Associate.API.Controllers
             _associateRepository = associateRepository;
         }
 
+
+        [HttpGet("GetAllAssociate")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult GetAllAssociate()
+        {
+            var result = _associateRepository.GetAllAssociate();
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest("GetAllAssociate failure");
+            }
+        }
+
         [HttpGet("GetAssociateById/{id}")]
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetAssociateById(int id)
@@ -59,11 +75,11 @@ namespace Associate.API.Controllers
 
         [HttpPut("UpdateAssociateAddress/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult UpdateAssociateAddress(int id, [FromBody] string addr)
+        public IActionResult UpdateAssociateAddress(int id, [FromBody] string address)
         {
             try
             {
-                var result = _associateRepository.UpdateAssociateAddress(id, addr);
+                var result = _associateRepository.UpdateAssociateAddress(id, address);
                 if (result)
                 {
                     return Ok(result);
