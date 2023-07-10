@@ -20,18 +20,23 @@ export class AuthService {
 
   }
 
+  setToken(token: string): void {
+    this.token = token;
+    localStorage.setItem('token', token);
+  }
 
-  getToken(): any {
+  getToken(): string {
 
    //   Fill the code
- return localStorage.getItem('token');
+
+  return this.token;
   }
 
   logout(): void {
 
    //   Fill the code
    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+   localStorage.removeItem('role');
 
 
   }
@@ -40,8 +45,12 @@ export class AuthService {
 
    //   Fill the code
    const token = this.getToken();
-   const decodedToken: any = jwt_decode(token);
-   return decodedToken.RoleName;
+   if (token) {
+     const decodedToken: any = jwt_decode(token);
+     this.role= decodedToken.RoleName;
+     return this.role;
+   }
+   return null;
 
    }
 

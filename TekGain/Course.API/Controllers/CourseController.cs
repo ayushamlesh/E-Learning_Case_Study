@@ -38,7 +38,7 @@ namespace Course.API.Controllers
         }
 
         [HttpGet("GetAllCourse")]
-        [Authorize(Roles = "Admin,User")]
+       // [Authorize(Roles = "Admin,User")]
         public IActionResult GetAllCourse()
         {
             var result = _courseRepository.GetAllCourse();

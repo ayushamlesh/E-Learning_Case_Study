@@ -43,9 +43,6 @@ export class CourseComponent implements OnInit {
   ngOnInit() {
 
 //   Fill the code
-this.sub = this._Activatedroute.queryParams.subscribe(params => {
-  this.paramFlag = params['paramFlag'];
-});
 this.courseService.viewAllCourses()
     .subscribe({
       next: (course) => {
@@ -57,6 +54,9 @@ this.courseService.viewAllCourses()
       }
 
     })
+    this.sub = this._Activatedroute.queryParams.subscribe(params => {
+      this.paramFlag = params['paramFlag'];
+    });
 }
 
   ngOnDestroy() {
