@@ -1,28 +1,33 @@
 <!--Fill the code-->
+
 <!--Fill the code-->
 <div class="container">
   <div class=".mat-list-item">
     <!-- Add Course Menu -->
     <ul>
+     <div>
     <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 1 }">Add Course</a>
-<br>
+
+</div>
+<div>
     <!-- Update Course Menu -->
     <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 2 }">Update Course</a>
-<br>
+</div>
     <!-- Ratings Menu -->
     <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 4 }">Ratings</a>
-<br>
-    <!-- View Course by Name Menu -->
+  <div>    <!-- View Course by Name Menu -->
     <a [routerLink]="['/course']" [queryParams]="{ paramFlag: 3 }">View Course by Name</a>
+  </div>
   </ul>
   </div>
 
 <div class="mat-card">
 <h2>Course Management</h2>
+<br>
 <!-- Card content goes here -->
 
 <!-- All  courses -->
-<div class="mat-card" *ngIf="paramFlag==0">
+<div class="table" *ngIf="paramFlag==null">
   <h2>All Courses</h2>
   <table *ngIf="courses.length > 0">
     <tr>

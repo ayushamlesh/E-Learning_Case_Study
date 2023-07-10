@@ -14,169 +14,138 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Reflection;
+using System.Security.Claims;
 using TekGain.DAL;
 using TekGain.DAL.Entities;
 using DA = System.ComponentModel.DataAnnotations;
 using RestClient = RestSharp.RestClient;
+
+
 
 namespace Login.API
 {
     [TestFixture]
     public class FunctionalTest
     {
-        // NOTE :
-        // 1. SHOULD NOT CHANGE THE TESTCASE NAME
-        // 2. iMPLEMENT THE TESTCASE AS PER THE REQUIREMENT MENTIONED THE EACH TESTCAESE
+        private AccountRepository _accountRepository;
+        private Mock<UserManager<User>> _userManagerMock;
+        private Mock<RoleManager<IdentityRole>> _roleManagerMock;
+        private Mock<IConfiguration> _configurationMock;
+        private Mock<ILogger<AccountRepository>> _loggerMock;
+
+        [SetUp]
+        public void Setup()
+        {
+            _userManagerMock = new Mock<UserManager<User>>(Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
+            _roleManagerMock = new Mock<RoleManager<IdentityRole>>(Mock.Of<IRoleStore<IdentityRole>>(), null, null, null, null);
+            _configurationMock = new Mock<IConfiguration>();
+            _loggerMock = new Mock<ILogger<AccountRepository>>();
+
+            _accountRepository = new AccountRepository(
+                _userManagerMock.Object,
+                _roleManagerMock.Object,
+                _configurationMock.Object,
+                _loggerMock.Object);
+        }
 
         [Test, Order(1)]
-        public void Test1_TDD_Invoke_SignUp_Method_ForValid()
+        public async Task Test1_TDD_Invoke_SignUp_Method_ForValid()
         {
-            // REQUIREMENT :
-            // TEST THE ACCOUNT REPOSITORY 'SIGNUP' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
-            // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-            var loggerMock = new Mock<ILogger<AccountRepository>>();
-            var userManagerMock = new Mock<UserManager<User>>();
-            var roleManagerMock = new Mock<RoleManager<IdentityRole>>();
-            var configurationMock = new Mock<IConfiguration>();
-
-            var accountRepository = new AccountRepository(
-                userManagerMock.Object,
-                roleManagerMock.Object,
-                configurationMock.Object,
-                loggerMock.Object);
-            var validUserData = new SignUp
+            // Arrange
+            var signUpObj = new SignUp
             {
-                FirstName = "john",
-                LastName = "doe",
-                Email = "johndoe@example.com",
-                Password = "Pa$$w0rd",
-                ConfirmPassword = "Pa$$w0rd"
+                FirstName = "a",
+                LastName = "K",
+                Email = "ak@example.com",
+                Password = "Ayush@11",
+                ConfirmPassword = "Ayush@11"
             };
-            var identityResult = IdentityResult.Success;
 
-            var result = accountRepository.SignUp(validUserData);
+            _userManagerMock.Setup(m => m.FindByEmailAsync(signUpObj.Email)).ReturnsAsync((User)null);
+            _userManagerMock.Setup(m => m.CreateAsync(It.IsAny<User>(), signUpObj.Password)).ReturnsAsync(IdentityResult.Success);
 
-            Assert.AreEqual(identityResult, result);
+            // Act
+            var result = await _accountRepository.SignUp(signUpObj);
+
+            // Assert
+            Assert.AreEqual(IdentityResult.Success, result);
         }
-
-
 
         [Test, Order(2)]
-        public void Test2_TDD_Invoke_SignUp_Method_ForExisting_Email()
+        public async Task Test2_TDD_Invoke_SignUp_Method_ForExisting_Email()
         {
-            // REQUIREMENT :
-            // TEST THE ACCOUNT REPOSITORY 'SIGNUP' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
-            // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-            var loggerMock = new Mock<ILogger<AccountRepository>>();
-            var userManagerMock = new Mock<UserManager<User>>();
-            var roleManagerMock = new Mock<RoleManager<IdentityRole>>();
-            var configurationMock = new Mock<IConfiguration>();
-
-            var accountRepository = new AccountRepository(
-                 userManagerMock.Object,
-                 roleManagerMock.Object,
-                 configurationMock.Object,
-                 loggerMock.Object);
-
-            var existingEmail = "johndoe@example.com";
-            var userData = new SignUp
+            // Arrange
+            var signUpObj = new SignUp
             {
-                FirstName = "john",
-                LastName = "doe",
-                Email = "johndoe@example.com",
-                Password = "Pa$$w0rd",
-                ConfirmPassword = "Pa$$w0rd"
+                FirstName = "a",
+                LastName = "K",
+                Email = "ak@example.com",
+                Password = "Ayush@11",
+                ConfirmPassword = "Ayush@11"
             };
 
+            _userManagerMock.Setup(m => m.FindByEmailAsync(signUpObj.Email)).ReturnsAsync((User)null);
 
-            var identityResult = IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
+            // Act
+            var result = await _accountRepository.SignUp(signUpObj);
 
-
-            var result = accountRepository.SignUp(userData);
-
-
-            Assert.AreEqual(identityResult, result);
+            // Assert
+            Assert.AreEqual(IdentityResult.Failed(new IdentityError { Description = "Email already exists" }), result);
         }
 
+
         [Test, Order(3)]
-        public void Test3_TDD_Check_SignIn_Method_JWTToken()
+        public async Task Test3_TDD_Check_SignIn_Method_JWTToken()
         {
-            // REQUIREMENT :
-            // TEST THE ACCOUNT REPOSITORY 'SIGNIN' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
-            // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-            var loggerMock = new Mock<ILogger<AccountRepository>>();
-            var userManagerMock = new Mock<UserManager<User>>();
-            var roleManagerMock = new Mock<RoleManager<IdentityRole>>();
-            var configurationMock = new Mock<IConfiguration>();
-
-            var accountRepository = new AccountRepository(
-                userManagerMock.Object,
-                roleManagerMock.Object,
-                configurationMock.Object,
-                loggerMock.Object);
-
-
-
+            // Arrange
             var signInObj = new SignIn
             {
-                Email = "johndoe@example.com",
-                Password = "Pa$$w0rd"
+
+                Email = "ak@example.com",
+                Password = "Ayush@11"
             };
 
-
             var user = new User { Email = signInObj.Email };
-            userManagerMock.Setup(m => m.FindByEmailAsync(signInObj.Email))
-                           .ReturnsAsync(user);
-            userManagerMock.Setup(m => m.CheckPasswordAsync(user, signInObj.Password))
-                           .ReturnsAsync(true);
+            var userRoles = new List<string> { "User" };
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+            userRoles.ForEach(role => authClaims.Add(new Claim(ClaimTypes.Role, role)));
 
+            _userManagerMock.Setup(m => m.FindByEmailAsync(signInObj.Email)).ReturnsAsync(user);
+            _userManagerMock.Setup(m => m.CheckPasswordAsync(user, signInObj.Password)).ReturnsAsync(true);
+            _userManagerMock.Setup(m => m.GetRolesAsync(user)).ReturnsAsync(userRoles);
 
-            configurationMock.Setup(c => c["JWT:Secret"])
-                             .Returns("sample-jwt-secret");
-            configurationMock.Setup(c => c["JWT:ValidIssuer"])
-                             .Returns("sample-issuer");
-            configurationMock.Setup(c => c["JWT:ValidAudience"])
-                             .Returns("sample-audience");
+            _configurationMock.Setup(c => c["JWT:Secret"]).Returns("sample-jwt-secret");
+            _configurationMock.Setup(c => c["JWT:ValidIssuer"]).Returns("sample-issuer");
+            _configurationMock.Setup(c => c["JWT:ValidAudience"]).Returns("sample-audience");
 
+            // Act
+            var result = await _accountRepository.SignIn(signInObj);
 
-            var result = accountRepository.SignIn(signInObj);
-
-
+            // Assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual("Incorrect Email/Password", result);
         }
 
         [Test, Order(4)]
-        public void Test4_TDD_Invoke_SignIn_Method_ForInvalid_Credentials()
+        public async Task Test4_TDD_Invoke_SignIn_Method_ForInvalid_Credentials()
         {
-            // REQUIREMENT :
-            // TEST THE ACCOUNT REPOSITORY 'SIGNIN' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
-            // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-            var loggerMock = new Mock<ILogger<AccountRepository>>();
-            var userManagerMock = new Mock<UserManager<User>>();
-            var roleManagerMock = new Mock<RoleManager<IdentityRole>>();
-            var configurationMock = new Mock<IConfiguration>();
-
-            var accountRepository = new AccountRepository(
-                userManagerMock.Object,
-                roleManagerMock.Object,
-                configurationMock.Object,
-                loggerMock.Object);
-
+            // Arrange
             var signInObj = new SignIn
             {
-                Email = "johndoe@example.com",
-                Password = "wrongpassword"
+                Email = "ak@example.com",
+                Password = "Ayush@11"
             };
 
+            _userManagerMock.Setup(m => m.FindByEmailAsync(signInObj.Email)).ReturnsAsync((User)null);
 
-            userManagerMock.Setup(m => m.FindByEmailAsync(signInObj.Email))
-                           .ReturnsAsync((User)null);
+            // Act
+            var result = await _accountRepository.SignIn(signInObj);
 
-
-            var result = accountRepository.SignIn(signInObj);
-
-
+            // Assert
             Assert.AreEqual("Incorrect Email/Password", result);
         }
     }
