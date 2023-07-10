@@ -13,7 +13,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Reflection;
 using TekGain.DAL;
-using TekGain.DAL.Entities;
 using TekGain.DAL.ErrorHandler;
 using DA = System.ComponentModel.DataAnnotations;
 using RestClient = RestSharp.RestClient;
@@ -28,7 +27,7 @@ namespace Course.API
         // NOTE :
         // 1. SHOULD NOT CHANGE THE TESTCASE NAME
         // 2. iMPLEMENT THE TESTCASE AS PER THE REQUIREMENT MENTIONED THE EACH TESTCAESE
-        
+   
 
 
 
@@ -38,9 +37,10 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'ADDCOURSE' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
+            
         }
 
-    [Test, Order(2)]
+        [Test, Order(2)]
         public void Test2_TDD_Invoke_GetCourseById_Method_ForValid()
         {
             // REQUIREMENT :

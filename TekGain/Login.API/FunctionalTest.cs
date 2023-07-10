@@ -74,7 +74,7 @@ namespace Login.API
 
         [Test, Order(2)]
         public async Task Test2_TDD_Invoke_SignUp_Method_ForExisting_Email()
-        {
+         {
             // Arrange
             var signUpObj = new SignUp
             {
@@ -85,13 +85,14 @@ namespace Login.API
                 ConfirmPassword = "Ayush@11"
             };
 
+            _userManagerMock.Setup(m => m.FindByEmailAsync(signUpObj.Email)).ReturnsAsync((User)null);
             // Act
             var result = await _accountRepository.SignUp(signUpObj);
 
             // Assert
             Assert.AreEqual(IdentityResult.Failed(new IdentityError { Description = "Email already exists" }), result);
+            _userManagerMock.Verify(m => m.Users, Times.Once); // Verify that the Users property was accessed to check for an existing user
         }
-
 
         [Test, Order(3)]
         public async Task Test3_TDD_Check_SignIn_Method_JWTToken()
