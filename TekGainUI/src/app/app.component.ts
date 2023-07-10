@@ -19,10 +19,11 @@ export class AppComponent {
   ngOnInit(): void {
 
    //   Fill the code
-   const token = this.authService.getToken();
-   if (token) {
-     this.isLoggedIn = true;
-   }
+  //  const token = this.authService.getToken();
+  //  if (token) {
+  //    this.isLoggedIn = true;
+  //  }
+  this.isLoggedIn = true;
 
   }
   onlogout() {

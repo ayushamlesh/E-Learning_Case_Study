@@ -7,6 +7,7 @@
     align-items: center;width:1000px;
     color:rgb(34, 32, 32);
     /* background-color:ghostwhite; */
+
 }
 .mat-card {
     background: rgb(130, 130, 133);
@@ -35,9 +36,9 @@ example-full-width2{
     /* margin-left:100px; */
     width:30%;
     /* margin-right: 1500px; */
-    
+
     color:black;
-}	 	  	  		    	   	 	   	 	
+}
 .spanFont{
     font-size:15px;
     height:10px;
@@ -46,7 +47,7 @@ example-full-width2{
 }
 #result{
     position:relative;
-  margin-top:450px; 
+  margin-top:450px;
    margin-bottom:0px;
     /* background-color:darkorange; */
     color:white;
@@ -54,7 +55,7 @@ example-full-width2{
     font-size:14;
     margin-right:400px;
     margin-left:-350px;
-  
+
   }
   .table {
     /* --bs-table-bg: transparent;
@@ -79,7 +80,7 @@ padding-left:15px;
 margin-left:10px;
 height:auto;
 width:auto;
-}	 	  	  		    	   	 	   	 	
+}
 .ml-20{
     margin-left:20%;
 }
@@ -97,3 +98,9 @@ width:auto;
 .ml-40{
     margin-left:40%;
 }
+
+
+mat-card-title{
+  margin-right: 500px;
+}
+

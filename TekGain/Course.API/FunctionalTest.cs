@@ -18,6 +18,7 @@ using TekGain.DAL.ErrorHandler;
 using DA = System.ComponentModel.DataAnnotations;
 using RestClient = RestSharp.RestClient;
 using Course.API.Repository;
+using System.Linq;
 
 namespace Course.API
 {
@@ -27,6 +28,9 @@ namespace Course.API
         // NOTE :
         // 1. SHOULD NOT CHANGE THE TESTCASE NAME
         // 2. iMPLEMENT THE TESTCASE AS PER THE REQUIREMENT MENTIONED THE EACH TESTCAESE
+        
+
+
 
         [Test, Order(1)]
         public void Test1_TDD_Invoke_AddCourse_Method_ForValid()
@@ -34,11 +38,9 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'ADDCOURSE' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-            // Arrange
-            
         }
 
-        [Test, Order(2)]
+    [Test, Order(2)]
         public void Test2_TDD_Invoke_GetCourseById_Method_ForValid()
         {
             // REQUIREMENT :
@@ -54,7 +56,10 @@ namespace Course.API
             // TEST THE COURSE REPOSITORY 'GETCOURSEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
             // Arrange
-            
+            // Arrange
+   
+
+
         }
 
         [Test, Order(4)]

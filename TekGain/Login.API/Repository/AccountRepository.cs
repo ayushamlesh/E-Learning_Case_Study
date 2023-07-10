@@ -34,6 +34,7 @@ namespace Login.API.Repository
             if (userExists != null)
             {
                 return IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
+                
             }
 
 
