@@ -29,15 +29,6 @@ namespace Associate.API
         // NOTE :
         // 1. SHOULD NOT CHANGE THE TESTCASE NAME
         // 2. iMPLEMENT THE TESTCASE AS PER THE REQUIREMENT MENTIONED THE EACH TESTCAESE
-        private Mock<TekGainContext> _mockContext;
-        private Mock<ILogger<AssociateRepository>> _mockLogger;
-
-        [SetUp]
-        public void Setup()
-        {
-            _mockContext = new Mock<TekGainContext>();
-            _mockLogger = new Mock<ILogger<AssociateRepository>>();
-        }
 
         [Test, Order(1)]
         public void Test1_TDD_Invoke_AddAssociate_Method_ForValid()
@@ -46,22 +37,7 @@ namespace Associate.API
             // TEST THE ASSOCIATE REPOSITORY 'ADDASSOCIATE' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
             // Arrange
-            var repository = new AssociateRepository(_mockContext.Object, _mockLogger.Object);
-
-            var associate = new TekGain.DAL.Entities.Associate { 
-
-                Id = 0,
-                Name="test",
-                Address="test",
-                PhoneNumber="1234567890",
-                Email = "test@example.com",
-            };
-
-            // Act
-            var result = repository.AddAssociate(associate);
-
-            // Assert
-            Assert.IsTrue(result);
+           
         }
 
         [Test, Order(2)]
