@@ -1,25 +1,48 @@
 <!--Fill the code-->
 <!--Fill the code-->
-<div>
+<div class="container">
   <div class=".mat-list-item">
     <!-- Add Course Menu -->
     <ul>
-    <li><a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 1 }">Add Course</a></li>
-
+    <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 1 }">Add Course</a>
+<br>
     <!-- Update Course Menu -->
-    <li><a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 2 }">Update Course</a></li>
-
+    <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 2 }">Update Course</a>
+<br>
     <!-- Ratings Menu -->
-    <li><a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 4 }">Ratings</a></li>
-
+    <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 4 }">Ratings</a>
+<br>
     <!-- View Course by Name Menu -->
-    <li><a [routerLink]="['/course']" [queryParams]="{ paramFlag: 3 }">View Course by Name</a></li>
+    <a [routerLink]="['/course']" [queryParams]="{ paramFlag: 3 }">View Course by Name</a>
   </ul>
   </div>
 
 <div class="mat-card">
 <h2>Course Management</h2>
 <!-- Card content goes here -->
+
+<!-- All  courses -->
+<div class="mat-card" *ngIf="paramFlag==0">
+  <h2>All Courses</h2>
+  <table *ngIf="courses.length > 0">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Fee</th>
+      <th>Duration</th>
+      <th>Type</th>
+    </tr>
+    <tr *ngFor="let course of courses">
+      <td>{{ course.id }}</td>
+      <td>{{ course.name }}</td>
+      <td>{{ course.fee }}</td>
+      <td>{{ course.duration }}</td>
+      <td>{{ course.type }}</td>
+    </tr>
+  </table>
+
+  <div id="error" *ngIf="error">{{ error }}</div>
+  </div>
 
 
 
