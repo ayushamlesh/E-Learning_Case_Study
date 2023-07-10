@@ -35,7 +35,7 @@ export class CourseComponent implements OnInit {
 
   flag1 = 0;
   flag2 = 0;
-  paramFlag = 1;
+  paramFlag = 0;
   sub: any = "";
 
   @Input() title: string = '';
@@ -46,6 +46,17 @@ export class CourseComponent implements OnInit {
 this.sub = this._Activatedroute.queryParams.subscribe(params => {
   this.paramFlag = params['paramFlag'];
 });
+this.courseService.viewAllCourses()
+    .subscribe({
+      next: (course) => {
+        this.courses = course;
+        console.log(course);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+
+    })
 }
 
   ngOnDestroy() {
