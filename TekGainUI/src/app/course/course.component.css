@@ -1,37 +1,37 @@
-.container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  overflow-y:scroll;
-  height: 711px;
-
+.mat-card-main {
+  background: rgb(130, 130, 133);
+  height: 400px;
+  width: 1014px;
+  color: rgb(116, 110, 110);
+  position: fixed;
+  overscroll-behavior:inherit ;
 }
 
-.mat-list-item {
-  width: 150px;
-  padding-bottom: 10px;
-  color: white;
-  border-color: beige 1px solid;
-  margin-left: 0%;
-}
-
-.mat-list-item ul {
-  list-style-type: none;
-}
-
-.mat-list-item div{
-  margin-top: 50px;
-
+.mat-card-main h2{
+  text-align: center;
+  padding:1rem
 }
 
 
 .mat-card {
   background: rgb(130, 130, 133);
-  height: 700px;
-  width: 760px;
+  height: 400px;
+  width: 1012px;
   color: rgb(116, 110, 110);
 }
 
+.mat-card h2{
+  text-align: center;
+  padding:1rem
+}
+
+.mat-card button{
+  margin-top:1rem;
+  margin-left:2rem;
+   padding:0.5rem;
+    background-color:black;
+     color:white
+}
 .mat-card form {
   text-align: center;
   color: white;
@@ -82,5 +82,6 @@ tr:hover {
   margin-top: 10px;
   color: red;
 }
+
 
 

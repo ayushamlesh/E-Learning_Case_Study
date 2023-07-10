@@ -1,29 +1,18 @@
 <!--Fill the code-->
 
-<!--Fill the code-->
-<div class="container">
-  <div class=".mat-list-item">
-    <!-- Add Course Menu -->
-    <ul>
-     <div>
-    <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 1 }">Add Course</a>
+<mat-sidenav-container class="example-sidenav-content">
+  <mat-sidenav mode="side" opened>
+      <mat-list>
+          <mat-list-item><a  [routerLink]="['/course']" [queryParams]="{paramFlag:1}">Add Course</a></mat-list-item>
+          <mat-list-item><a  [routerLink]="['/course']" [queryParams]="{paramFlag:2}">Update Course</a></mat-list-item>
+          <mat-list-item><a  [routerLink]="['/course']" [queryParams]="{paramFlag:3}">View Course By Name</a></mat-list-item>
+          <mat-list-item><a  [routerLink]="['/course']" [queryParams]="{paramFlag:4}">Ratings</a></mat-list-item>
+      </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="mat-card">
 
-</div>
-<div>
-    <!-- Update Course Menu -->
-    <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 2 }">Update Course</a>
-</div>
-    <!-- Ratings Menu -->
-    <a  [routerLink]="['/course']" [queryParams]="{ paramFlag: 4 }">Ratings</a>
-  <div>    <!-- View Course by Name Menu -->
-    <a [routerLink]="['/course']" [queryParams]="{ paramFlag: 3 }">View Course by Name</a>
-  </div>
-  </ul>
-  </div>
-
-<div class="mat-card">
+<div class="mat-card-main">
 <h2>Course Management</h2>
-<br>
 <!-- Card content goes here -->
 
 <!-- All  courses -->
@@ -46,37 +35,38 @@
     </tr>
   </table>
 
+
   <div id="error" *ngIf="error">{{ error }}</div>
   </div>
 
 
 
 <!-- Add Course -->
-<div class="mat-card" *ngIf="paramFlag == 1">
-<h2>Add Course</h2>
+<form class="mat-card" *ngIf="paramFlag == 1">
+    <h2>Add Course</h2>
 
-<form (ngSubmit)="addCourse()">
-  <div>
-    <label for="name">Course Name*</label>
-    <br>
-    <input type="text" id="name" [(ngModel)]="name" required />
-  </div>
-  <div>
-    <label for="fee">Fee*</label>
-    <br>
-    <input type="number" id="fee" [(ngModel)]="fee" required min="20" max="100" />
-  </div>
-  <div>
-    <label for="duration">Duration in Days*</label>
-    <br>
-    <input type="number" id="duration" [(ngModel)]="duration" required />
-  </div>
-  <div>
-    <label for="type">Course Type*</label>
-    <br>
-    <input type="text" id="type" [(ngModel)]="type" required />
-  </div>
-  <button type="submit">Add Course</button>
+    <form (ngSubmit)="addCourse()">
+          <div>
+            <label for="name">Course Name*</label>
+            <br>
+            <input type="text" id="name" [(ngModel)]="name" required />
+          </div>
+          <div>
+            <label for="fee">Fee*</label>
+            <br>
+            <input type="number" id="fee" [(ngModel)]="fee" required min="20" max="100" />
+          </div>
+          <div>
+            <label for="duration">Duration in Days*</label>
+            <br>
+            <input type="number" id="duration" [(ngModel)]="duration" required />
+          </div>
+          <div>
+            <label for="type">Course Type*</label>
+            <br>
+            <input type="text" id="type" [(ngModel)]="type" required />
+          </div>
+          <button id="addCourse" type="button">Add Course</button></form>
 </form>
 
 <div id="result" *ngIf="message">Course added successfully</div>
@@ -123,6 +113,7 @@
 </form>
 
 <table *ngIf="courses.length > 0">
+  <thead>
   <tr>
     <th>ID</th>
     <th>Name</th>
@@ -130,13 +121,16 @@
     <th>Duration</th>
     <th>Type</th>
   </tr>
-  <tr *ngFor="let course of courses">
-    <td>{{ course.id }}</td>
-    <td>{{ course.name }}</td>
-    <td>{{ course.fee }}</td>
-    <td>{{ course.duration }}</td>
-    <td>{{ course.type }}</td>
-  </tr>
+  </thead>
+    <tbody>
+    <tr *ngFor="let course of courses">
+      <td>{{ course.id }}</td>
+      <td>{{ course.name }}</td>
+      <td>{{ course.fee }}</td>
+      <td>{{ course.duration }}</td>
+      <td>{{ course.type }}</td>
+    </tr>
+    </tbody>
 </table>
 
 <div id="error" *ngIf="error">{{ error }}</div>
@@ -172,5 +166,5 @@
 
 <div id="error" *ngIf="error">{{ error }}</div>
 </div>
-</div>
-</div>
+</mat-sidenav-content>
+</mat-sidenav-container>

@@ -59,6 +59,7 @@ namespace Login.API
                 Email = "ak@example.com",
                 Password = "Ayush@11",
                 ConfirmPassword = "Ayush@11"
+
             };
 
             _userManagerMock.Setup(m => m.FindByEmailAsync(signUpObj.Email)).ReturnsAsync((User)null);
@@ -83,8 +84,6 @@ namespace Login.API
                 Password = "Ayush@11",
                 ConfirmPassword = "Ayush@11"
             };
-
-            _userManagerMock.Setup(m => m.FindByEmailAsync(signUpObj.Email)).ReturnsAsync((User)null);
 
             // Act
             var result = await _accountRepository.SignUp(signUpObj);
