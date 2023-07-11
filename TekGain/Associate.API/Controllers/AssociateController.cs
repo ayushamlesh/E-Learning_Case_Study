@@ -1,6 +1,7 @@
 ﻿using Associate.API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TekGain.DAL.ErrorHandler;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,6 +25,7 @@ namespace Associate.API.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllAssociate()
         {
+
             var result = _associateRepository.GetAllAssociate();
             if (result != null)
             {
@@ -39,15 +41,24 @@ namespace Associate.API.Controllers
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetAssociateById(int id)
         {
-
-            var asot = _associateRepository.GetAssociateById(id);
-            if (asot != null)
+            try
             {
+                var asot = _associateRepository.GetAssociateById(id);
+                /*if (asot != null)
+                {
+                    return Ok(asot);
+                }
+                else
+                {
+                    return BadRequest("Invalid associate id");
+                }*/
                 return Ok(asot);
+
             }
-            else
+            catch (ServiceException ex)
             {
                 return BadRequest("Invalid associate id");
+
             }
         }
 
