@@ -60,13 +60,13 @@ namespace Associate.API.Repository
             {
                 result.Address = addr;
                 _context.SaveChanges();
+
+                //_logger.LogInformation($"{DateTime.Now} INFO: Updated Associate address associate-{id}");
+                _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Updated Associate address associate-{id}");
+
+
+                return true;
             }
-
-            //_logger.LogInformation($"{DateTime.Now} INFO: Updated Associate address associate-{id}");
-            _logger.LogInformation($"{DateTimeOffset.UtcNow} INFO: Updated Associate address associate-{id}");
-
-
-            return true;
         }
     }
 }
