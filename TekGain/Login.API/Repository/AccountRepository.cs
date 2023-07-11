@@ -33,8 +33,8 @@ namespace Login.API.Repository
             var userExists = await _um.FindByEmailAsync(signUpObj.Email);
             if (userExists != null)
             {
-                return IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
-                
+                // return IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
+                return IdentityResult.Failed();
             }
 
 
@@ -87,12 +87,12 @@ namespace Login.API.Repository
             var user = await _um.FindByEmailAsync(signInObj.Email);
             if (user == null)
             {
-                _logger.LogWarning($"{DateTime.UtcNow} WAR : Sign failed : {signInObj.Email}");
+                //_logger.LogWarning($"{DateTime.UtcNow} WAR : SignIn failed : {signInObj.Email}");
                 return "Incorrect Email/Password";
             }
             if (!await _um.CheckPasswordAsync(user, signInObj.Password))
             {
-                _logger.LogWarning($"{DateTime.Now} WAR : Sign failed : {signInObj.Email}");
+                _logger.LogWarning($"{DateTime.Now} WAR : SignIn failed : {signInObj.Email}");
                 return "Incorrect Email/Password";
             }
 
@@ -108,7 +108,7 @@ namespace Login.API.Repository
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
             string token = GenerateToken(authClaims);
-            _logger.LogInformation($"{DateTimeOffset.Now} INFO : Sign success {signInObj.Email}");
+            _logger.LogInformation($"{DateTimeOffset.Now} INFO : SignIn success {signInObj.Email}");
             return token;
         }
 
