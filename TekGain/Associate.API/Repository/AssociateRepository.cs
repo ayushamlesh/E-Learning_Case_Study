@@ -35,14 +35,18 @@ namespace Associate.API.Repository
         }
         public TekGain.DAL.Entities.Associate? GetAssociateById(int id)
         {
+
+
             var a = _context.Associates.FirstOrDefault(c => c.Id == id);
-            if (a != null)
+            if (a == null)
             {
-                return a;
+                throw new ServiceException("Invalid Associate Id");
+
             }
             else
             {
-                throw new ServiceException("Invalid Associate Id");
+                return a;
+
             }
         }
         public bool UpdateAssociateAddress(int id, string addr)
