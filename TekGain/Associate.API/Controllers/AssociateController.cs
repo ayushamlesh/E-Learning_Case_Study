@@ -5,6 +5,7 @@ using TekGain.DAL.ErrorHandler;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+
 namespace Associate.API.Controllers
 {
     [Route("api/[controller]")]
@@ -43,14 +44,7 @@ namespace Associate.API.Controllers
             try
             {
                 var asot = _associateRepository.GetAssociateById(id);
-                /*if (asot != null)
-                {
-                    return Ok(asot);
-                }
-                else
-                {
-                    return BadRequest("Invalid associate id");
-                }*/
+            
                 return Ok(asot);
 
             }
