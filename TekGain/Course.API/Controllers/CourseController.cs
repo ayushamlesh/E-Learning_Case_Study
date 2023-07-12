@@ -54,7 +54,7 @@ namespace Course.API.Controllers
 
         [HttpPut("UpdateCourse/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult UpdateCourse(int id, [FromBody] int fee)
+        public IActionResult UpdateCourse(int id, [FromQuery] int fee)
         {
             var result = _courseRepository.UpdateCourse(id, fee);
             if (result)
@@ -64,9 +64,9 @@ namespace Course.API.Controllers
             else
             {
                 return BadRequest(result);
-                //return BadRequest("UpdateCourse failure");
             }
         }
+
 
         [HttpGet("GetCourseById/{id}")]
         [Authorize(Roles = "Admin,User")]
@@ -86,7 +86,7 @@ namespace Course.API.Controllers
         }
 
         [HttpGet("GetRating/{id}")]
-        [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetRating(int id)
         {
             var result = _courseRepository.GetRating(id);
@@ -97,7 +97,7 @@ namespace Course.API.Controllers
         }
 
         [HttpPut("CalculateAverageRating/{id}/{rating}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,User")]
         public IActionResult CalculateAverageRating(int id, double rating)
         {
             var result = _courseRepository.CalculateAverageRating(id, rating);

@@ -32,47 +32,50 @@ export class AssociateComponent implements OnInit {
 
   flag1 = 0;
   flag2 = 0;
-  paramFlag = 1;
+  paramFlag = 0;
   sub: any = "";
 
   @Input() title: string = '';
 
-  ngOnInit() {	 	  	  		    	   	 	   	 	
-     
+  ngOnInit() {
+
    //   Fill the code
-   
+    this.sub = this._Activatedroute.queryParams.subscribe(params => {
+      this.paramFlag = params['paramFlag'];
+    });
+
   }
 
 
   ngOnDestroy() {
-     
+
    //   Fill the code
-   
-  }	 	  	  		    	   	 	   	 	
+
+  }
 
   constructor(private associateService: AssociateService, private router: Router, private _Activatedroute: ActivatedRoute) { }
 
- 
+
   addAssociate(): void {
-     
+
    //   Fill the code
-   
+
   }
 
 
   updateAssociate(): void {
-     
+
    //   Fill the code
-   
+
 
   }
 
-  viewAssociates(): void {	 	  	  		    	   	 	   	 	
-     
+  viewAssociates(): void {
+
    //   Fill the code
-   
+
   }
-  	  		    	   	 	   	 	
+
 
 }
 
