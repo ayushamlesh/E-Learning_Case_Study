@@ -24,17 +24,27 @@ export class LoginComponent implements OnInit {
 
   onClickSubmit(): void {
     this.isFormSubmitted = true;
-    this.authService.login(this.user)
-      .subscribe(
-        (response: any) => {
-          this.authService.getToken();
-          console.log("Logged in successfully");
-          this.router.navigate(['course']);
-        },
-        (error: any) => {
-          this.message = "Invalid email/password";
-          alert("Invalid email/password");
-        }
-      );
+    const islogedIn=this.authService.login(this.user)
+      // .subscribe(
+      //   (response: any) => {
+      //     const token=response.token;
+      //     this.authService.getToken();
+      //     console.log("Logged in successfully");
+      //     this.router.navigate(['course']);
+      //   },
+      //   (error: any) => {
+      //     this.message = "Invalid email/password";
+      //     alert("Invalid email/password");
+      //   }
+      // );
+      if(!islogedIn)
+      {
+            this.message = "Invalid email/password";
+            alert(this.message);
+      }
+      else{
+        console.log("Logged in successfully");
+         this.router.navigate(['course']);
+      }
   }
 }

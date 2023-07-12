@@ -8,16 +8,25 @@ import jwt_decode from "jwt-decode";
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
 
-  private token:string= '';
+export class AuthService {
+private token: string = '';
   private role: string = '';
 
+  constructor(private http: HttpClient) {}
+
   login(user: User): any {
-
-    return this.http.post<any>('http://localhost:8081/api/Account/signin', user);
-   //   Fill the code
-
+    return this.http.post<any>('http://localhost:8081/api/Account/signin', user)
+      .pipe(
+        catchError(this.errorHandler)
+      )
+      .subscribe((response: any) => {
+        const token = response.token;
+        this.setToken(token);
+        return true;
+      }, () => {
+        return false;
+      });
   }
 
   setToken(token: string): void {
@@ -27,37 +36,28 @@ export class AuthService {
 
   getToken(): string {
 
-   //   Fill the code
-   let storedToken =  localStorage.getItem("token");
-   console.log(`stored Token ${JSON.stringify(storedToken)}`);
-   return this.token;
+    return this.token;
   }
 
   logout(): void {
-
-   //   Fill the code
-   localStorage.removeItem('token');
-   localStorage.removeItem('role');
-
-
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
   }
+
   getRole(): any {
-
-
-   //   Fill the code
-   const token = this.getToken();
-   if (token) {
-     const decodedToken: any = jwt_decode(token);
-     this.role= decodedToken.RoleName;
-     return this.role;
-   }
-   return null;
-
-   }
-
-
-  constructor(private http: HttpClient) {
-
+    const token = this.getToken();
+    if (token) {
+      const decodedToken: any = jwt_decode(token);
+      this.role= decodedToken.RoleName;
+      return this.role;
+    }
+    return null;
   }
 
+  private errorHandler(error: HttpErrorResponse): any {
+    console.error('An error occurred:', error.error.message);
+    localStorage.setItem('token', '');
+    return throwError('Something went wrong. Please try again later.');
+  }
 }
+
