@@ -1,114 +1,89 @@
-<!--Fill the code-->
-
 <mat-sidenav-container class="example-sidenav-content">
   <mat-sidenav mode="side" opened>
-      <mat-list>
-          <mat-list-item><a  [routerLink]="['/associate']" [queryParams]="{paramFlag:1}">Add Associate</a></mat-list-item>
-          <mat-list-item><a  [routerLink]="['/associate']" [queryParams]="{paramFlag:2}">Update Associate</a></mat-list-item>
-          <mat-list-item><a  [routerLink]="['/associate']" [queryParams]="{paramFlag:3}">View Associate</a></mat-list-item>
-      </mat-list>
+    <mat-list>
+      <mat-list-item><a [routerLink]="['/Associate']" [queryParams]="{paramFlag:1}">Add Associate</a></mat-list-item>
+      <mat-list-item><a [routerLink]="['/Associate']" [queryParams]="{paramFlag:2}">Update Associate</a></mat-list-item>
+      <mat-list-item><a [routerLink]="['/Associate']" [queryParams]="{paramFlag:3}">View Associate</a></mat-list-item>
+    </mat-list>
   </mat-sidenav>
   <mat-sidenav-content class="mat-card">
+    <div class="mat-card-main">
+      <h2>Associate Management</h2>
 
-<div class="mat-card-main">
-<h2>Associate Management</h2>
-<!-- Card content goes here -->
+      <!-- Add Associates -->
+      <form class="mat-card" *ngIf="paramFlag == 1" (ngSubmit)="addAssociate()">
+        <h2>Add Associate Details</h2>
+        <div>
+          <label for="name">Associate Name*</label><br>
+          <input type="text" id="name" [(ngModel)]="name" required />
+        </div>
+        <div>
+          <label for="email">Email Id*</label><br>
+          <input type="email" id="email" [(ngModel)]="email" required />
+        </div>
+        <div>
+          <label for="address">Associate Address*</label><br>
+          <input type="text" id="address" [(ngModel)]="address" required />
+        </div>
+        <div>
+          <label for="phoneNumber">Phone Number*</label><br>
+          <input type="text" id="phoneNumber" [(ngModel)]="phoneNumber" required />
+        </div>
+        <button id="addAssociate" type="submit">Add Associate</button>
+      </form>
+      <div id="result" *ngIf="message1">Associate added successfully</div>
+      <div id="error" *ngIf="error">{{ error }}</div>
 
-<!-- Add CAssociates -->
-<form class="mat-card" *ngIf="paramFlag == 1">
-    <h2>Add Associate Details</h2>
+      <!-- Update Associate Details -->
+      <form class="mat-card" *ngIf="paramFlag == 2" (ngSubmit)="updateAssociate()">
+        <h2>Update Associate Details</h2>
+        <div>
+          <label for="associateEmail">Associate EmailId*</label><br>
+          <select id="associateEmail" [(ngModel)]="email" required>
+            <option *ngFor="let associate of associates" [value]="associate.email">{{ associate.name }}</option>
+          </select>
+        </div>
+        <div>
+          <label for="associateAddress">Associate Address*</label><br>
+          <input type="text" id="associateAddress" [(ngModel)]="address" required />
+        </div>
+        <button id="updateAssociate" type="submit">Update Associate</button>
+      </form>
+      <div id="result" *ngIf="message2">Address Updated successfully.</div>
+      <div id="error" *ngIf="error">{{ error }}</div>
 
-    <form (ngSubmit)="addAssociate()">
-          <div>
-            <label for="name">Associate Name*</label>
-            <br>
-            <input type="text" id="name" [(ngModel)]="name" required />
-          </div>
-          <div>
-            <label for="email">Email Id*</label>
-            <br>
-            <input type="text" id="email" [(ngModel)]="email"/>
-          </div>
-          <div>
-            <label for="address">Associate Address*</label>
-            <br>
-            <input type="text" id="address" [(ngModel)]="address" required />
-          </div>
-          <div>
-            <label for="phoneNumber">Phone Number*</label>
-            <br>
-            <input type="text" id="phoneNumber" [(ngModel)]="phoneNumber" required />
-          </div>
-          <button id="addAssociate" type="button">Add Associate</button></form>
-</form>
-
-<div id="result" *ngIf="message1">Associate added successfully</div>
-<div id="error" *ngIf="error">{{ error }}</div>
-</div>
-
-<!-- Update Course Fee -->
-<div class="mat-card" *ngIf="paramFlag == 2">
-<h2>Update associate details</h2>
-
-<form (ngSubmit)="updateAssociate()">
-  <div>
-    <label for="associateEmail">Associate EmailId*</label>
-    <br>
-    <select id="associateEmail" [(ngModel)]="email" required>
-      <option *ngFor="let course of associates" [value]="course.email">{{ course.name }}</option>
-    </select>
-  </div>
-  <div>
-    <label for="associateAddress">Associate Address*</label>
-    <br>
-    <input type="text" id="associateAddress" [(ngModel)]="address" required />
-  </div>
-  <button id="updateAssociate" type="submit">Update Associate</button>
-</form>
-
-<div id="result" *ngIf="message1">Address Updated successfully.</div>
-<div id="error" *ngIf="error">{{ error }}</div>
-</div>
-
-<!-- View Course By Name -->
-<div class="mat-card" *ngIf="paramFlag == 3">
-<h2>View Course Details by Name</h2>
-
-<form (ngSubmit)="viewAssociates()">
-  <div>
-    <label for="name">Course Name*</label>
-    <br>
-    <select id="name" [(ngModel)]="email" required>
-      <option *ngFor="let course of associates" [value]="course.name">{{ course.name }}</option>
-    </select>
-  </div>
-  <button type="submit">View Associate</button>
-</form>
-
-<table *ngIf="associates.length > 0">
-  <thead>
-  <tr>
-    <th>Associate Id</th>
-    <th>Associate Name</th>
-    <th>Associate Email</th>
-    <th>Address</th>
-    <th>Contact</th>
-  </tr>
-  </thead>
-    <tbody>
-    <tr *ngFor="let course of associates">
-      <td>{{ course.id }}</td>
-      <td>{{ course.name }}</td>
-      <td>{{ course.email }}</td>
-      <td>{{ course.address }}</td>
-      <td>{{ course.phoneNumber }}</td>
-    </tr>
-    </tbody>
-</table>
-
-<div id="error" *ngIf="error">{{ error }}</div>
-</div>
-
-
-</mat-sidenav-content>
+      <!-- View Associate Details by Name -->
+      <form class="mat-card" *ngIf="paramFlag == 3" (ngSubmit)="viewAssociates()">
+        <h2>View Associate Details by Name</h2>
+        <div>
+          <label for="name">Associate Name*</label><br>
+          <select id="name" [(ngModel)]="name" required>
+            <option *ngFor="let associate of associates" [value]="associate.name">{{ associate.name }}</option>
+          </select>
+        </div>
+        <button type="submit">View Associate</button>
+      </form>
+      <table *ngIf="associates.length > 0">
+        <thead>
+          <tr>
+            <th>Associate Id</th>
+            <th>Associate Name</th>
+            <th>Associate Email</th>
+            <th>Address</th>
+            <th>Contact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let associate of associates">
+            <td>{{ associate.id }}</td>
+            <td>{{ associate.name }}</td>
+            <td>{{ associate.email }}</td>
+            <td>{{ associate.address }}</td>
+            <td>{{ associate.phoneNumber }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="error" *ngIf="error">{{ error }}</div>
+    </div>
+  </mat-sidenav-content>
 </mat-sidenav-container>
