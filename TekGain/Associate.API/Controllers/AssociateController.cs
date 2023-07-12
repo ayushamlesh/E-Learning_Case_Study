@@ -20,7 +20,6 @@ namespace Associate.API.Controllers
             _associateRepository = associateRepository;
         }
 
-
         [HttpGet("GetAllAssociate")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllAssociate()

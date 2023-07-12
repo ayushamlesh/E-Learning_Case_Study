@@ -15,6 +15,7 @@ namespace Associate.API.Repository
             _context = context;
             _logger = logger;
         }
+
         public List<TekGain.DAL.Entities.Associate> GetAllAssociate()
         {
             return _context.Associates.ToList();
