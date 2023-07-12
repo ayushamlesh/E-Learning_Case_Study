@@ -56,7 +56,7 @@ namespace Associate.API.Controllers
             }
             catch (ServiceException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Invalid associate id");
 
             }
         }
@@ -85,7 +85,7 @@ namespace Associate.API.Controllers
 
         [HttpPut("UpdateAssociateAddress/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult UpdateAssociateAddress(int id, [FromQuery] string address)
+        public IActionResult UpdateAssociateAddress(int id, [FromBody] string address)
         {
             try
             {
