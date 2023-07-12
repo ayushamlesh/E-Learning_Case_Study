@@ -28,8 +28,9 @@ export class AuthService {
   getToken(): string {
 
    //   Fill the code
-
-  return this.token;
+   let storedToken =  localStorage.getItem("token");
+   console.log(`stored Token ${JSON.stringify(storedToken)}`);
+   return this.token;
   }
 
   logout(): void {

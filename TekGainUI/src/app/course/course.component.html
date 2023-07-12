@@ -9,14 +9,15 @@
           <mat-list-item><a  [routerLink]="['/course']" [queryParams]="{paramFlag:4}">Ratings</a></mat-list-item>
       </mat-list>
   </mat-sidenav>
-  <mat-sidenav-content class="mat-card">
+
+<mat-sidenav-content class="mat-card">
 
 <div class="mat-card-main">
 <h2>Course Management</h2>
 <!-- Card content goes here -->
 
 <!-- All  courses -->
-<div class="table" *ngIf="paramFlag==null">
+<div class="mat-card" *ngIf="paramFlag==null">
   <h2>All Courses</h2>
   <table *ngIf="courses.length > 0">
     <tr>
@@ -71,7 +72,7 @@
 
 <div id="result" *ngIf="message">Course added successfully</div>
 <div id="error" *ngIf="error">{{ error }}</div>
-</div>
+
 
 <!-- Update Course Fee -->
 <div class="mat-card" *ngIf="paramFlag == 2">
@@ -165,6 +166,7 @@
 </table>
 
 <div id="error" *ngIf="error">{{ error }}</div>
+</div>
 </div>
 </mat-sidenav-content>
 </mat-sidenav-container>

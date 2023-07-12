@@ -39,8 +39,10 @@ export class CourseComponent implements OnInit {
   sub: any = "";
 
   @Input() title: string = '';
+  isFormSubmitted = false;
 
   ngOnInit() {
+
 
 //   Fill the code
 this.courseService.viewAllCourses()
@@ -57,6 +59,8 @@ this.courseService.viewAllCourses()
     this.sub = this._Activatedroute.queryParams.subscribe(params => {
       this.paramFlag = params['paramFlag'];
     });
+
+
 }
 
   ngOnDestroy() {
@@ -71,6 +75,15 @@ this.courseService.viewAllCourses()
   addCourse(): void {
 
    //   Fill the code
+   this.isFormSubmitted = true;
+   this.courseService.addCourse(this.course)
+   .subscribe({
+     next: () => {
+     },
+     error: (response) => {
+       console.log(response);
+     }
+   })
 
 
 

@@ -1,33 +1,25 @@
 ﻿using Course.API.Repository;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using RestSharp;
+using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Reflection;
-using TekGain.DAL;
-using TekGain.DAL.ErrorHandler;
-using DA = System.ComponentModel.DataAnnotations;
-using RestClient = RestSharp.RestClient;
-using Course.API.Repository;
 using System.Linq;
+using TekGain.DAL;
+using TekGain.DAL.Entities;
+using TekGain.DAL.ErrorHandler;
+
 
 namespace Course.API
 {
+
     [TestFixture]
     public class FunctionalTest
     {
         // NOTE :
         // 1. SHOULD NOT CHANGE THE TESTCASE NAME
         // 2. iMPLEMENT THE TESTCASE AS PER THE REQUIREMENT MENTIONED THE EACH TESTCAESE
-   
 
 
 
@@ -37,7 +29,8 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'ADDCOURSE' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-            
+          
+
         }
 
         [Test, Order(2)]
@@ -46,7 +39,10 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'GETCOURSEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-           
+            // Arrange
+         
+
+
         }
 
         [Test, Order(3)]
@@ -55,9 +51,9 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'GETCOURSEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-            // Arrange
-            // Arrange
-   
+          
+
+
 
 
         }
