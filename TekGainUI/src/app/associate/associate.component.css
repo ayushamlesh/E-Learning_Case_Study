@@ -1,8 +1,87 @@
+.mat-card-main {
+  background: rgb(130, 130, 133);
+  height: 400px;
+  width: 1014px;
+  color: rgb(116, 110, 110);
+  position: fixed;
+  overscroll-behavior:inherit ;
+}
+
+.mat-card-main h2{
+  text-align: center;
+  padding:1rem
+}
+
+
 .mat-card {
-    background: rgb(130, 130, 133);
-    height:700px;
-    /* color: rgb(116, 110, 110); */
+  background: rgb(130, 130, 133);
+  height: 400px;
+  width: 1012px;
+  color: rgb(116, 110, 110);
 }
-table{
-    margin-left:470px;
+
+.mat-card h2{
+  text-align: center;
+  padding:1rem
 }
+
+.mat-card button{
+  margin-top:1rem;
+  margin-left:2rem;
+   padding:0.5rem;
+    background-color:black;
+     color:white
+}
+.mat-card form {
+  text-align: center;
+  color: white;
+}
+
+a:hover {
+  cursor: pointer;
+
+}
+
+a:link,
+a:visited {
+  color: white;
+}
+
+.mat-table {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table h2{
+    text-align: center;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f2f2f2;
+}
+
+#error {
+  margin-top: 10px;
+  color: red;
+}
+
+
+
