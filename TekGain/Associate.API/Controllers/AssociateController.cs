@@ -54,7 +54,6 @@ namespace Associate.API.Controllers
             {
                 return BadRequest(ex.Message);
 
-
             }
         }
 
@@ -94,13 +93,11 @@ namespace Associate.API.Controllers
                 else
                 {
                     return BadRequest(result);
-
                 }
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-
             }
         }
     }
