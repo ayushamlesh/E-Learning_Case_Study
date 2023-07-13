@@ -22,6 +22,8 @@ using Associate.API.Repository;
 using NUnit.Framework.Internal;
 using TekGain.DAL.ErrorHandler;
 using System.Linq;
+using Associate.API.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Associate.API
 {
@@ -30,7 +32,15 @@ namespace Associate.API
     {
         // NOTE :
         // 1. SHOULD NOT CHANGE THE TESTCASE NAME
-     
+        private Mock<IAssociateRepository> _associateRepositoryMock;
+        private ILogger<AssociateRepository> _loggerMock;
+
+        [SetUp]
+        public void Setup()
+        {
+            _associateRepositoryMock = new Mock<IAssociateRepository>();
+            _loggerMock = Mock.Of<ILogger<AssociateRepository>>();
+        }
         // 2. iMPLEMENT THE TESTCASE AS PER THE REQUIREMENT MENTIONED THE EACH TESTCAESE
 
         [Test, Order(1)]
@@ -51,8 +61,20 @@ namespace Associate.API
             // REQUIREMENT :
             // TEST THE ASSOCIATE REPOSITORY 'GETASSOCIATEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
- 
-          
+
+            var associate = new TekGain.DAL.Entities.Associate { Id = 1 };
+
+            _associateRepositoryMock.Setup(repo => repo.GetAssociateById(1)).Returns(associate);
+            var associateController = new AssociateController(_associateRepositoryMock.Object);
+
+            // Act
+            var result = associateController.GetAssociateById(1);
+
+            // Assert
+            Assert.IsTrue(result is OkObjectResult);
+            Assert.AreEqual(associate, ((OkObjectResult)result).Value);
+
+
 
         }
 
@@ -62,7 +84,16 @@ namespace Associate.API
             // REQUIREMENT :
             // TEST THE ASSOCIATE REPOSITORY 'GETASSOCIATEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-         
+
+            _associateRepositoryMock.Setup(repo => repo.GetAssociateById(1)).Throws(new ServiceException("Invalid Associate Id"));
+            var associateController = new AssociateController(_associateRepositoryMock.Object);
+
+            // Act
+            var result = associateController.GetAssociateById(1);
+
+            // Assert
+            Assert.IsTrue(result is BadRequestObjectResult);
+
 
         }
     
@@ -82,6 +113,18 @@ namespace Associate.API
             // REQUIREMENT :
             // TEST THE ASSOCIATE REPOSITORY 'GETALLASSOCIATE' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
+
+            var associates = new List<TekGain.DAL.Entities.Associate> { new TekGain.DAL.Entities.Associate(), new TekGain.DAL.Entities.Associate() };
+
+            _associateRepositoryMock.Setup(repo => repo.GetAllAssociate()).Returns(associates);
+            var associateController = new AssociateController(_associateRepositoryMock.Object);
+
+            // Act
+            var result = associateController.GetAllAssociate();
+
+            // Assert
+            Assert.IsTrue(result is OkObjectResult);
+            Assert.AreEqual(associates, ((OkObjectResult)result).Value);
         }
     }
 }
