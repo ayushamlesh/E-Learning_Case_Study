@@ -42,7 +42,7 @@ namespace Admission.API.Repository
             }
 
             // Add details to the admission table
-            // ...
+         
 
             TekGain.DAL.Entities.Admission adm = new TekGain.DAL.Entities.Admission
             {
