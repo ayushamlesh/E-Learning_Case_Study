@@ -21,6 +21,7 @@ namespace Associate.API.Controllers
             _associateRepository = associateRepository;
         }
 
+
         [HttpGet("GetAllAssociate")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllAssociate()
@@ -36,6 +37,7 @@ namespace Associate.API.Controllers
                 return BadRequest("GetAllAssociate failure");
             }
         }
+
 
         [HttpGet("GetAssociateById/{id}")]
         [Authorize(Roles = "User,Admin")]
