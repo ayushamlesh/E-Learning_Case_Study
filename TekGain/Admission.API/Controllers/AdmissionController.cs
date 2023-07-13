@@ -1,4 +1,4 @@
-﻿using Admission.API.Repository;
+using Admission.API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TekGain.DAL.ErrorHandler;

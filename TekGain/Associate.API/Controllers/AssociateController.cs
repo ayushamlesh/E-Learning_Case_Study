@@ -1,4 +1,4 @@
-﻿using Associate.API.Repository;
+using Associate.API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TekGain.DAL.ErrorHandler;
@@ -52,8 +52,7 @@ namespace Associate.API.Controllers
             }
             catch (ServiceException ex)
             {
-                return BadRequest(ex.Message);
-
+                return BadRequest(ex.Message)
 
             }
         }

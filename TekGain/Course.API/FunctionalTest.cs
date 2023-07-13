@@ -1,6 +1,4 @@
-﻿using Course.API.Controllers;
 using Course.API.Repository;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -21,7 +19,7 @@ namespace Course.API
     {
         // NOTE :
         // 1. SHOULD NOT CHANGE THE TESTCASE NAME
-        private Mock<ICourseRepository> _courseRepositoryMock;
+         private Mock<ICourseRepository> _courseRepositoryMock;
         private ILogger<CourseRepository> _loggerMock;
 
         [SetUp]
@@ -62,7 +60,7 @@ namespace Course.API
             // Assert
             Assert.IsTrue(result is OkObjectResult);
             Assert.AreEqual(course, ((OkObjectResult)result).Value);
-
+         
 
 
         }
@@ -73,9 +71,7 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'GETCOURSEBYID' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-
-            // Arrange
-            _courseRepositoryMock.Setup(repo => repo.GetCourseById(111)).Throws(new ServiceException("Invalid Course Id"));
+           _courseRepositoryMock.Setup(repo => repo.GetCourseById(111)).Throws(new ServiceException("Invalid Course Id"));
             var courseController = new CourseController(_courseRepositoryMock.Object);
 
             // Act
@@ -83,6 +79,8 @@ namespace Course.API
 
             // Assert
             Assert.IsTrue(result is BadRequestObjectResult);
+
+
 
 
 
@@ -106,8 +104,7 @@ namespace Course.API
             // Assert
             Assert.IsTrue(result is OkObjectResult);
             Assert.AreEqual(rating, ((OkObjectResult)result).Value);
-
-
+           
         }
 
         [Test, Order(5)]
@@ -116,7 +113,8 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'GETRATING' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-      
+            // Arrange
+           
 
         }
 
@@ -126,7 +124,7 @@ namespace Course.API
             // REQUIREMENT :
             // TEST THE COURSE REPOSITORY 'CALCULATEAVERAGERATING' PROCESS TO SEE WHETHER IT SUCCEEDS OR FAILS
             // IMPLEMENTATION IS ACCURATE OR NOT FOR VALID CASES
-       
+            // Arrange
           
         }
     }
