@@ -52,7 +52,8 @@ namespace Associate.API.Controllers
             }
             catch (ServiceException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message)
+
 
             }
         }
@@ -93,11 +94,13 @@ namespace Associate.API.Controllers
                 else
                 {
                     return BadRequest(result);
+
                 }
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+
             }
         }
     }
