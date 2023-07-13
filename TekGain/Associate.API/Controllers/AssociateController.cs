@@ -52,7 +52,7 @@ namespace Associate.API.Controllers
             }
             catch (ServiceException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message)
 
             }
         }
