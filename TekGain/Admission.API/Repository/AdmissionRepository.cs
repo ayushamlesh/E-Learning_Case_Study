@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RestSharp;
 using System.Net;
 using System.Net.Http;
@@ -51,6 +51,7 @@ namespace Admission.API.Repository
                 Status = "",
                 Feedback = ""
             };
+
 
             var addStatus = await _context.Admissions.AddAsync(adm);
             _context.SaveChangesAsync();
