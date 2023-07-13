@@ -94,13 +94,11 @@ namespace Associate.API.Controllers
                 else
                 {
                     return BadRequest(result);
-
                 }
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-
             }
         }
     }
